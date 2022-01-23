@@ -2,8 +2,8 @@ package com.entity;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -19,26 +19,20 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @NonNull
     private String name;
 
-    @NonNull
-    @Pattern(regexp = "([a-zA-Z_0-9]+)@([a-zA-Z]+)\\.([a-z]+)")
     private String email;
-    
+
     private int activities_amount;
 
     private int requests_amount;
 
-    @NonNull
-    private String status;
+    private String status = "available";
 
     private int total_points;
 
-    @NonNull
-    private String role;
+    private String role = "user";
 
-    @NonNull
     private String password;
 
 
@@ -58,12 +52,11 @@ public class User {
         this.id = id;
     }
 
-    @NonNull
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(@NonNull String email) {
+    public void setEmail(String email) {
         this.email = email;
     }
 
@@ -83,12 +76,11 @@ public class User {
         this.requests_amount = requests_amount;
     }
 
-    @NonNull
     public String getStatus() {
         return status;
     }
 
-    public void setStatus(@NonNull String status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -100,21 +92,27 @@ public class User {
         this.total_points = total_points;
     }
 
-    @NonNull
     public String getRole() {
         return role;
     }
 
-    public void setRole(@NonNull String role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
-    @NonNull
+
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(@NonNull String password) {
+    public User(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+
+    }
+
+    public void setPassword(String password) {
         this.password = password;
     }
 }

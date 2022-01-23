@@ -2,9 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Activity Tracker</title>
 </head>
 <body>
+Registration form
+<form action="/ActivityTracker/reg" method="post" >
+
+    <label for="name">Enter name</label>
+    <input name="name" id="name"/> <br>
+
+    <label for="password">Enter password</label>
+    <input type="password" name="password" id="password"/> <br>
+
+    <label for="email">Enter email, optional </label>
+    <input type="text" name="email" id="email"/>
+    <hr>
+    <input type="submit" value="Submit"/>
+</form>
+<hr><hr>
+Login form
+<form action="/ActivityTracker/login" method="post" >
+
+    <label for="login">Enter login(name)</label>
+    <input name="name" id="login"/> <br>
+
+    <label for="pass">Enter password</label>
+    <input type="password" name="password" id="pass"/> <br>
+    <hr>
+    <input type="submit" value="Submit"/>
+</form>
 
 </body>
 </html>
