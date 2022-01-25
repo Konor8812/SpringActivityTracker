@@ -1,10 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="@{/style.css}"/>
 </head>
 <body>
+<hr>
+<form method="post" action="/ActivityTracker/logOut">
+    <input type="button" value="Log Out">
+</form>
+<hr>
 Logged in as admin
+<hr>
+<table>
+    <tr>
+        <th>name</th>
+        <th>email</th>
+        <th>status</th>
+        <th>activities amount</th>
+        <th>requests amount</th>
+        <th>total points</th>
+    </tr>
+
+    <tr th:each="user: ${users}">
+        <td th:text="${user.name}"> </td>
+        <td th:text="${user.email}"> </td>
+        <td th:text="${user.status}"> </td>
+        <td th:text="${user.activitiesAmount}"> </td>
+        <td th:text="${user.requestsAmount}"> </td>
+        <td th:text="${user.totalPoints}"> </td>
+    </tr>
+</table>
 </body>
 </html>

@@ -13,7 +13,7 @@ public class ActivityDTO {
         this.name = activity.getName();
         this.duration = activity.getDuration();
         this.reward = activity.getDuration();
-        this.takenBy = activity.getTaken_by();
+        this.takenBy = activity.getTakenBy();
     }
 
     public static ActivityDTO parseActivity(Activity activity){

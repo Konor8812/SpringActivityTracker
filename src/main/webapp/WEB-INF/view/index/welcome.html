@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8">
     <title>Activity Tracker</title>
 </head>
@@ -31,6 +31,8 @@ Login form
     <hr>
     <input type="submit" value="Submit"/>
 </form>
-
+<div th:if="${regErrorInputNotValid}">
+    <p th:text="'wrong input reg not valid'">assdd</p>
+</div>
 </body>
 </html>

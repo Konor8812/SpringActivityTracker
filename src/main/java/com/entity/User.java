@@ -3,11 +3,8 @@ package com.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,19 +18,22 @@ public class User {
 
     private String name;
 
+    private String password;
+
     private String email;
 
-    private int activities_amount;
+    @Column(name="activities_amount")
+    private int activitiesAmount = 0;
 
-    private int requests_amount;
+    @Column(name="requests_amount")
+    private int requestsAmount = 0;
 
     private String status = "available";
 
-    private int total_points;
+    @Column(name="total_points")
+    private int totalPoints = 0;
 
     private String role = "user";
-
-    private String password;
 
 
     public String getName() {
@@ -60,20 +60,20 @@ public class User {
         this.email = email;
     }
 
-    public int getActivities_amount() {
-        return activities_amount;
+    public int getActivitiesAmount() {
+        return activitiesAmount;
     }
 
-    public void setActivities_amount(int activities_amount) {
-        this.activities_amount = activities_amount;
+    public void setActivitiesAmount(int activities_amount) {
+        this.activitiesAmount = activities_amount;
     }
 
-    public int getRequests_amount() {
-        return requests_amount;
+    public int getRequestsAmount() {
+        return requestsAmount;
     }
 
-    public void setRequests_amount(int requests_amount) {
-        this.requests_amount = requests_amount;
+    public void setRequestsAmount(int requests_amount) {
+        this.requestsAmount = requests_amount;
     }
 
     public String getStatus() {
@@ -84,12 +84,12 @@ public class User {
         this.status = status;
     }
 
-    public int getTotal_points() {
-        return total_points;
+    public int getTotalPoints() {
+        return totalPoints;
     }
 
-    public void setTotal_points(int total_points) {
-        this.total_points = total_points;
+    public void setTotalPoints(int total_points) {
+        this.totalPoints = total_points;
     }
 
     public String getRole() {
@@ -105,11 +105,10 @@ public class User {
         return password;
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, String password, String email) {
         this.name = name;
-        this.email = email;
         this.password = password;
-
+        this.email = email;
     }
 
     public void setPassword(String password) {

@@ -1,12 +1,10 @@
 package com.entity;
 
+import com.entity.embedded.ActivityUserId;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 
 
 @NoArgsConstructor
@@ -15,12 +13,34 @@ import javax.validation.constraints.Pattern;
 @Table(name = "user_has_activity")
 public class ActivityUser {
 
+    @EmbeddedId
+    private ActivityUserId activityUserId;
 
-
-    @NonNull
     private String status;
 
-    @NonNull
     private String time_spent;
 
+    public ActivityUserId getActivityUserId() {
+        return activityUserId;
+    }
+
+    public void setActivityUserId(ActivityUserId activityUserId) {
+        this.activityUserId = activityUserId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getTime_spent() {
+        return time_spent;
+    }
+
+    public void setTime_spent(String time_spent) {
+        this.time_spent = time_spent;
+    }
 }

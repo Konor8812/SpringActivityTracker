@@ -5,19 +5,23 @@ import com.entity.User;
 public class UserDTO {
 
     private final String name;
+    private final String status;
     private final String email;
-    private final int activities_amount;
-    private final int requests_amount;
-    private final int total_points;
-    private final String role;
+    private final int activitiesAmount;
+    private final int requestsAmount;
+    private final int totalPoints;
 
     private UserDTO(User user) {
         this.name = user.getName();
         this.email = user.getEmail();
-        this.activities_amount = user.getActivities_amount();
-        this.requests_amount = user.getRequests_amount();
-        this.total_points = user.getTotal_points();
-        this.role = user.getRole();
+        this.activitiesAmount = user.getActivitiesAmount();
+        this.requestsAmount = user.getRequestsAmount();
+        this.totalPoints = user.getTotalPoints();
+        this.status = user.getStatus();
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public static UserDTO parseUser(User user){
@@ -32,19 +36,16 @@ public class UserDTO {
         return email;
     }
 
-    public int getActivities_amount() {
-        return activities_amount;
+    public int getActivitiesAmount() {
+        return activitiesAmount;
     }
 
-    public int getRequests_amount() {
-        return requests_amount;
+    public int getRequestsAmount() {
+        return requestsAmount;
     }
 
-    public int getTotal_points() {
-        return total_points;
+    public int getTotalPoints() {
+        return totalPoints;
     }
 
-    public String getRole() {
-        return role;
-    }
 }

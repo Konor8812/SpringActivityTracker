@@ -2,7 +2,6 @@ package com.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
 
@@ -20,11 +19,13 @@ public class Activity {
 
     private String duration;
 
-    private int reward;
+    private double reward = 0;
 
-    private int taken_by;
+    @Column(name="taken_by")
+    private int takenBy = 0;
 
-    private int requested_times;
+    @Column(name="requested_times")
+    private int requestedTimes = 0;
 
     public long getId() {
         return id;
@@ -50,7 +51,7 @@ public class Activity {
         this.duration = duration;
     }
 
-    public int getReward() {
+    public double getReward() {
         return reward;
     }
 
@@ -58,19 +59,19 @@ public class Activity {
         this.reward = reward;
     }
 
-    public int getTaken_by() {
-        return taken_by;
+    public int getTakenBy() {
+        return takenBy;
     }
 
-    public void setTaken_by(int taken_by) {
-        this.taken_by = taken_by;
+    public void setTakenBy(int taken_by) {
+        this.takenBy = taken_by;
     }
 
-    public int getRequested_times() {
-        return requested_times;
+    public int getRequestedTimes() {
+        return requestedTimes;
     }
 
-    public void setRequested_times(int requested_times) {
-        this.requested_times = requested_times;
+    public void setRequestedTimes(int requested_times) {
+        this.requestedTimes = requested_times;
     }
 }

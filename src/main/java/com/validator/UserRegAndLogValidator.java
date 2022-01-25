@@ -5,7 +5,6 @@ import java.util.regex.*;
 public class UserRegAndLogValidator {
 
 
-
     public static boolean validateLoginInput(String name,
                                              String pass,
                                              String email){
