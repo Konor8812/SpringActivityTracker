@@ -3,15 +3,19 @@
 <head xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="@{/style.css}"/>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
 </head>
 <body>
 <hr>
-<form method="post" action="/ActivityTracker/logOut">
-    <input type="button" value="Log Out">
+<form method="post" action="/ActivityTracker/admin/logout">
+    <input type="submit" value="Log Out">
+</form>
+<hr><br>
+Logged in as admin
+<form method="post" action="/ActivityTracker/admin/profile">
+    <input type="submit" value="Log Out">
 </form>
 <hr>
-Logged in as admin
 <hr>
 <table>
     <tr>

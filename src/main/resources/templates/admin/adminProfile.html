@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head xmlns:th="http://www.thymeleaf.org">
+    <meta charset="UTF-8">
+    <title>Profile</title>
+</head>
+<body>
+<hr>
+<form method="post" action="/ActivityTracker/admin">
+    <input type="submit" value="Log Out">
+</form>
+<hr>
+<p th:text="'You are admin'"></p>
+<form action="/ActivityTracker/changePass" method="post">
+    <input type="submit" value="change password?"/>
+</form>
+
+<div th:if="${shouldShowChangePassForm}">
+    <form action="/ActivityTracker/updateUser?update=pass" method="post">
+        <label for="passField" th:text="'Enter new password'">asd</label>
+        <input type="text" id="passField" name="newValue"/>
+        <input type="submit" value="confirm changes"/>
+    </form>
+</div>
+
+<div th:if="#{currentUser.emptyEmail}">
+    <form action="/ActivityTracker/updateUser?update=email" method="post">
+        <label for="emailField" th:text="'Add email'">asd</label>
+        <input type="text" id="emailField" name="newValue"/>
+        <input type="submit" value="confirm changes"/>
+    </form>
+</div>
+
+</body>
+</html>

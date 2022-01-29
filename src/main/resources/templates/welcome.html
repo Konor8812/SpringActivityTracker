@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-<head xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head >
     <meta charset="UTF-8">
     <title>Activity Tracker</title>
 </head>
@@ -24,7 +24,7 @@ Login form
 <form action="/ActivityTracker/login" method="post" >
 
     <label for="login">Enter login(name)</label>
-    <input name="name" id="login"/> <br>
+    <input type="text" name="name" id="login"/> <br>
 
     <label for="pass">Enter password</label>
     <input type="password" name="password" id="pass"/> <br>
@@ -32,7 +32,16 @@ Login form
     <input type="submit" value="Submit"/>
 </form>
 <div th:if="${regErrorInputNotValid}">
-    <p th:text="'wrong input reg not valid'">assdd</p>
+    <p th:text="'wrong input reg not valid'"></p>
+</div>
+<div th:if="${logErrorInputNotValid}">
+    <p th:text="'wrong input login not valid'"></p>
+</div>
+<div th:if="${regErrorUserExists}">
+    <p th:text="'user with such name exists!'"></p>
+</div>
+<div th:if="${logErrorNoSuchUserFound}">
+    <p th:text="'no user with such creditials found'"></p>
 </div>
 </body>
 </html>

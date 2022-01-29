@@ -7,14 +7,23 @@ import com.repository.UserRepository;
 
 import org.apache.log4j.Logger;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.jpa.provider.HibernateUtils;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.management.Query;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
-public class UserService {
+@Service
+public class UserService implements UserDetailsService {
 
     private static final Logger logger = Logger.getLogger(UserService.class);
 
@@ -26,19 +35,14 @@ public class UserService {
             userRepository.save(user);
             return true;
         }catch(Exception e){
-            logger.info("user " + user.getId() + " wasn't saved");
+            logger.info("user " + user.getName() + " wasn't saved");
             return false;
         }
-
-    }
-
-    public User findByName(String name) {
-        return userRepository.findByName(name);
     }
 
     public User findByNameAndPass(String name, String pass){
         User user = userRepository.findByName(name);
-        if(user.getPassword().equals(pass)){
+        if(user != null && user.getPassword().equals(pass)){
             return user;
         }else{
             return null;
@@ -52,5 +56,28 @@ public class UserService {
             dtos.add(UserDTO.parseUser(u));
         }
         return dtos;
+    }
+
+    public void updateUserPass(long id, String value) {
+        User user = userRepository.findById(id);
+        user.setPassword(value);
+        userRepository.save(user);
+    }
+
+    public void updateUserEmail(long id, String value) {
+        User user = userRepository.findById(id);
+        user.setEmail(value);
+        userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
+        User user = userRepository.findByName(name);
+
+        if(user == null){
+            throw new UsernameNotFoundException("user " + name + " wasn't found");
+        }
+
+        return user;
     }
 }

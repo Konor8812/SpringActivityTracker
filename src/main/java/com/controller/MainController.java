@@ -1,23 +1,18 @@
 package com.controller;
 
-
-import com.dto.ActivityDTO;
-import com.dto.UserDTO;
 import com.entity.User;
 import com.service.ActivityService;
 import com.service.ActivityUserService;
 import com.service.UserService;
-import com.validator.UserRegAndLogValidator;
+import com.validator.InputDataValidator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/ActivityTracker")
@@ -34,7 +29,7 @@ public class MainController {
 
     @GetMapping("")
     public String testMethod() {
-        return "index/welcome";
+        return "welcome";
     }
 
     @PostMapping("/reg")
@@ -42,20 +37,20 @@ public class MainController {
                                     @RequestParam(name = "password") String pass,
                                     @RequestParam(name = "email", required = false) String email,
                                     Model model) {
-        User user = new User(name, pass, email);
 
-        if (!UserRegAndLogValidator.validateLoginInput(name, pass, email)) {
-            System.out.println("reg input data isn't valid!");
+        if (!InputDataValidator.validateLoginInput(name, pass, email)) {
             model.addAttribute("regErrorInputNotValid", true);
-            return "index/welcome";
+            return "welcome";
         }
+
+        User user = new User(name, pass, email);
 
         if (userService.saveUser(user)) {
             model.addAttribute("currentUser", user);
-            return "user/mainUser";
+            return "redirect:user";
         } else {
             model.addAttribute("regErrorUserExists", true);
-            return "index/welcome";
+            return "welcome";
         }
     }
 
@@ -63,36 +58,45 @@ public class MainController {
     public String loginCheck(@RequestParam(name = "name") String name,
                              @RequestParam(name = "password") String pass,
                              Model model) {
-        if (!UserRegAndLogValidator.validateLoginInput(name, pass, null)) {
-            System.out.println("log input data isn't valid!");
+        if (!InputDataValidator.validateLoginInput(name, pass, null)) {
             model.addAttribute("logErrorInputNotValid", true);
-            return "index/welcome";
+            return "welcome";
         }
         User user = userService.findByNameAndPass(name, pass);
         if (user != null) {
             model.addAttribute("currentUser", user);
             String role = user.getRole();
             if(role.equals("user")){
-                List<ActivityDTO> activities = activityService.getAllActivitiesList();
-                model.addAttribute("activities", activities);
-            }else if(role.equals("admin")){
-                List<UserDTO> users = userService.getAllUsersList();
-                model.addAttribute("users", users);
-            }
+                return "redirect:user";
 
-            return getPageByRole(role);
+            }else {
+                return "redirect:admin";
+            }
         }
         model.addAttribute("logErrorNoSuchUserFound", true);
-        return "index/welcome";
+        return "welcome";
     }
 
-
-
-
-    private String getPageByRole(String userRole){
-        if(userRole.equals("user")){
-            return "user/mainUser";
+    @PostMapping("/updateUser")
+    public String updateUserPassOrEmail(@RequestParam(name="update") String fieldToUpdate,
+                                        @RequestParam(name="newValue") String value,
+                                        Model model){
+        User user = (User) model.getAttribute("currentUser");
+        if(fieldToUpdate.equals("password") && InputDataValidator.validatePassword(value)) {
+            userService.updateUserPass(user.getId(), value);
+            user.setPassword(value);
+        } else if(fieldToUpdate.equals("email") && InputDataValidator.validateEmail(value)){
+            userService.updateUserEmail(user.getId(), value);
+            user.setEmail(value);
         }
-        return "admin/mainAdmin";
+
+        return user.getRole().equals("user") ? "user/userProfile" : "admin/adminProfile";
+
     }
+
+    @GetMapping("/error")
+    public String handleError(HttpServletRequest request, Authentication authentication) {
+        return "error";
+    }
+
 }
