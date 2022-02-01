@@ -5,43 +5,9 @@
     <title>Activity Tracker</title>
 </head>
 <body>
-Registration form
-<form action="/ActivityTracker/reg" method="post" >
-
-    <label for="name">Enter name</label>
-    <input name="name" id="name"/> <br>
-
-    <label for="password">Enter password</label>
-    <input type="password" name="password" id="password"/> <br>
-
-    <label for="email">Enter email, optional </label>
-    <input type="text" name="email" id="email"/>
-    <hr>
-    <input type="submit" value="Submit"/>
-</form>
-<hr><hr>
-Login form
-<form action="/ActivityTracker/login" method="post" >
-
-    <label for="login">Enter login(name)</label>
-    <input type="text" name="name" id="login"/> <br>
-
-    <label for="pass">Enter password</label>
-    <input type="password" name="password" id="pass"/> <br>
-    <hr>
-    <input type="submit" value="Submit"/>
-</form>
-<div th:if="${regErrorInputNotValid}">
-    <p th:text="'wrong input reg not valid'"></p>
-</div>
-<div th:if="${logErrorInputNotValid}">
-    <p th:text="'wrong input login not valid'"></p>
-</div>
-<div th:if="${regErrorUserExists}">
-    <p th:text="'user with such name exists!'"></p>
-</div>
-<div th:if="${logErrorNoSuchUserFound}">
-    <p th:text="'no user with such creditials found'"></p>
-</div>
+<hr>
+Welcome! <br>
+GO to registration <a href="/registration" th:text="registrate"></a>   <br><br>
+GO to login <a href="/login" th:text="login"></a>
 </body>
 </html>

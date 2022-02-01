@@ -14,20 +14,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
+//"/welcome",
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/", "/registration", "/welcome").not().fullyAuthenticated()
+                .authorizeRequests().antMatchers("/", "/registration", "/login").not().fullyAuthenticated()
                 .and()
-                .authorizeRequests().antMatchers("/mainUser/**").hasRole("USER")
+                .authorizeRequests().antMatchers("/user/**").hasRole("USER")
                 .and()
-                .authorizeRequests().antMatchers("/mainAdmin/**").hasRole("ADMIN")
+                .authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN")
                 .and()
                 .authorizeRequests().and().exceptionHandling().accessDeniedPage("/error")
                 .and()
                 .authorizeRequests().and().formLogin()// Submit URL of login page.
-                .loginPage("/welcome")
-                .defaultSuccessUrl("/login")
-                .failureUrl ("/login")
+                .loginPage("/login")
+                .defaultSuccessUrl("/successfulLogin")
+                .failureUrl ("/failureLogin")
                 .and().logout().logoutUrl("/logout").logoutSuccessUrl("/");
     }
 

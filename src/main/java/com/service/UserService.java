@@ -80,4 +80,31 @@ public class UserService implements UserDetailsService {
 
         return user;
     }
+
+    public void updatePointsAmount(long userId, double points){
+
+
+
+    }
+
+    public void updateRequestsAmoubt(long userId, boolean increment){
+
+        if(increment){
+
+        } else{
+
+        }
+    }
+
+    public void updateActivitiesEmount(long userId, boolean increment){
+
+    }
+
+    public void updateStatus(long userId, String status){
+
+    }
+
+    public void deleteUser(long userId){
+
+    }
 }

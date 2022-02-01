@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("ActivityTracker/admin")
+@RequestMapping("/admin")
 public class AdminController {
 
     @Autowired
@@ -25,11 +25,6 @@ public class AdminController {
         model.addAttribute("users", users);
 
         return "admin/mainAdmin";
-    }
-
-    @PostMapping("/logout")
-    public String returnToMain(){
-        return "redirect:/ActivityTracker";
     }
 
     @PostMapping("/profile")

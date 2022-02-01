@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-@RequestMapping("/ActivityTracker")
 public class MainController {
 
     @Autowired
@@ -28,11 +27,20 @@ public class MainController {
     ActivityUserService activityUserService;
 
     @GetMapping("")
-    public String testMethod() {
+    public String welcomeMethod(Model model) {
+        User user = (User) model.getAttribute("currentUser");
+        if(user != null) {
+            return user.getRole().equals("user") ? "user/mainUser" : "admin/mainAdmin";
+        }
         return "welcome";
     }
 
-    @PostMapping("/reg")
+    @GetMapping("/registration")
+    public String getRegistrationForm(){
+        return "registration";
+    }
+
+    @PostMapping("/registration")
     public String registrationCheck(@RequestParam(name = "name") String name,
                                     @RequestParam(name = "password") String pass,
                                     @RequestParam(name = "email", required = false) String email,
@@ -40,27 +48,32 @@ public class MainController {
 
         if (!InputDataValidator.validateLoginInput(name, pass, email)) {
             model.addAttribute("regErrorInputNotValid", true);
-            return "welcome";
+            return "registration";
         }
 
         User user = new User(name, pass, email);
 
         if (userService.saveUser(user)) {
             model.addAttribute("currentUser", user);
-            return "redirect:user";
+            return "redirect:/";
         } else {
             model.addAttribute("regErrorUserExists", true);
-            return "welcome";
+            return "registration";
         }
     }
 
-    @PostMapping("/login")
+    @GetMapping("/login")
+    public String getLoginForm(){
+        return "login";
+    }
+
+    @PostMapping("/successfulLogin")
     public String loginCheck(@RequestParam(name = "name") String name,
                              @RequestParam(name = "password") String pass,
                              Model model) {
         if (!InputDataValidator.validateLoginInput(name, pass, null)) {
             model.addAttribute("logErrorInputNotValid", true);
-            return "welcome";
+            return "login";
         }
         User user = userService.findByNameAndPass(name, pass);
         if (user != null) {
@@ -68,13 +81,12 @@ public class MainController {
             String role = user.getRole();
             if(role.equals("user")){
                 return "redirect:user";
-
             }else {
                 return "redirect:admin";
             }
         }
         model.addAttribute("logErrorNoSuchUserFound", true);
-        return "welcome";
+        return "login";
     }
 
     @PostMapping("/updateUser")
@@ -91,7 +103,6 @@ public class MainController {
         }
 
         return user.getRole().equals("user") ? "user/userProfile" : "admin/adminProfile";
-
     }
 
     @GetMapping("/error")
@@ -99,4 +110,8 @@ public class MainController {
         return "error";
     }
 
+    @GetMapping("/failureLogin")
+    public String logError(){
+        return "login";
+    }
 }

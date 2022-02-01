@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<hr>
+Login form
+<form action="/login" method="post" >
+
+    <label for="login">Enter login(name)</label>
+    <input type="text" name="name" id="login"/> <br>
+
+    <label for="pass">Enter password</label>
+    <input type="password" name="password" id="pass"/> <br>
+    <hr>
+    <input type="submit" value="Submit"/>
+</form>
+<div th:if="${logErrorInputNotValid}">
+    <p th:text="'wrong input login not valid'"></p>
+</div>
+
+<div th:if="${logErrorNoSuchUserFound}">
+    <p th:text="'no user with such creditials found'"></p>
+</div>
+</body>
+</html>

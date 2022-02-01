@@ -16,7 +16,7 @@ public class ActivityUser {
     @EmbeddedId
     private ActivityUserId activityUserId;
 
-    private String status;
+    private String status = "requested";
 
     private String time_spent;
 

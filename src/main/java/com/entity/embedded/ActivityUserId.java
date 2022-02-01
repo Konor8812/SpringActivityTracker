@@ -1,9 +1,12 @@
 package com.entity.embedded;
 
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@NoArgsConstructor
 @Embeddable
 public class ActivityUserId implements Serializable {
 
@@ -18,4 +21,19 @@ public class ActivityUserId implements Serializable {
     public void setUserId(long userId) {
         this.userId = userId;
     }
+
+    public long getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(long activityId) {
+        this.activityId = activityId;
+    }
+
+    public ActivityUserId(long activityId, long userId) {
+        this.userId = userId;
+        this.activityId = activityId;
+    }
+
+
 }

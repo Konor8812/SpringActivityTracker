@@ -19,6 +19,16 @@ public class ActivityService {
     @Autowired
     ActivityRepository activityRepository;
 
+    public boolean addActivity(Activity activity){
+        try {
+            activityRepository.save(activity);
+            return true;
+        }catch(Exception e){
+            logger.info("activity " + activity.getName() + " wasn't saved");
+            return false;
+        }
+    }
+
     public List<ActivityDTO> getAllActivitiesList(){
         List<Activity> activities = activityRepository.findAll();
         List<ActivityDTO> dtos = new ArrayList<>();
@@ -28,4 +38,15 @@ public class ActivityService {
         }
         return  dtos;
     }
+
+    public void updateRequestedTimesAmount(long activityId){
+
+    }
+
+    public void updateTakesAmount(long activityId){
+
+    }
+
+
+
 }
