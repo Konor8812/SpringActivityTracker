@@ -5,6 +5,26 @@
     <title>Title</title>
 </head>
 <body>
-
+It's your profile <br>
+<form method="post" action="/logout">
+    <input type="submit" value="Log Out">
+</form>
+<hr>
+<table>
+    <tr>
+        <th>name</th>
+        <th>duration</th>
+        <th>reward</th>
+        <th>time spent</th>
+        <th>completed?</th>
+    </tr>
+    <tr th:each="activity: ${usersActivities}">
+        <td th:text="${activity.name}"> </td>
+        <td th:text="${activity.duration}"> </td>
+        <td th:text="${activity.reward}"> </td>
+        <td th:text="${activity.timeSpent}"></td>
+        <td> <a href="user/userProfile/completedActivity?activityId=${activity.id}" th:text="submit"></a> </td>
+    </tr>
+</table>
 </body>
 </html>

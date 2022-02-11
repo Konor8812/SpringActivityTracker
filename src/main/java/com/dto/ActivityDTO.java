@@ -9,11 +9,31 @@ public class ActivityDTO {
     private final String reward;
     private final int takenBy;
 
+    private String description;
+    private String timeSpent;
+    private String status;
+
     private ActivityDTO(Activity activity) {
         this.name = activity.getName();
         this.duration = activity.getDuration();
         this.reward = activity.getDuration();
         this.takenBy = activity.getTakenBy();
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public static ActivityDTO parseActivity(Activity activity){
@@ -34,5 +54,13 @@ public class ActivityDTO {
 
     public int getTakenBy() {
         return takenBy;
+    }
+
+    public String getTimeSpent() {
+        return timeSpent;
+    }
+
+    public void setTimeSpent(String timeSpent) {
+        this.timeSpent = timeSpent;
     }
 }

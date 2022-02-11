@@ -2,29 +2,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Registration</title>
 </head>
 <body>
 Registration form
-<form action="/registration" method="post" >
+<form method="post" action="/registration" >
 
-    <label for="name">Enter name</label>
-    <input name="name" id="name"/> <br>
+    <label for="login">Enter login(name)</label>
+    <input type="text" id="login" name="login"/> <br>
 
-    <label for="password">Enter password</label>
-    <input type="password" name="password" id="password"/> <br>
+    <label for="pass">Enter password</label>
+    <input type="password"  id="pass" name="password"/> <br>
 
     <label for="email">Enter email, optional </label>
-    <input type="text" name="email" id="email"/>
+    <input type="text" id="email" name="email"/> <br>
     <hr>
     <input type="submit" value="Submit"/>
 </form>
-<hr>
-<div th:if="${regErrorInputNotValid}">
-    <p th:text="'wrong input reg not valid'"></p>
-</div>
+<br>
 <div th:if="${regErrorUserExists}">
     <p th:text="'user with such name exists!'"></p>
+</div>
+<div th:if="${regErrorInvalidInput}">
+<p style="color:red" th:text="'Invalid data'"></p>
 </div>
 </body>
 </html>

@@ -47,6 +47,8 @@ public class ActivityService {
 
     }
 
-
+    public String getActivityDescription(long activityId){
+        return activityRepository.getActivityDescription(activityId);
+    }
 
 }

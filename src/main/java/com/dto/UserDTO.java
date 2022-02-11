@@ -4,6 +4,7 @@ import com.entity.User;
 
 public class UserDTO {
 
+    private final long id;
     private final String name;
     private final String status;
     private final String email;
@@ -11,7 +12,11 @@ public class UserDTO {
     private final int requestsAmount;
     private final int totalPoints;
 
+    private String role;
+
+
     private UserDTO(User user) {
+        this.id=user.getId();
         this.name = user.getName();
         this.email = user.getEmail();
         this.activitiesAmount = user.getActivitiesAmount();
@@ -48,4 +53,7 @@ public class UserDTO {
         return totalPoints;
     }
 
+    public long getId() {
+        return id;
+    }
 }

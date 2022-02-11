@@ -1,6 +1,7 @@
 package com.entity;
 
 import com.entity.embedded.ActivityUserId;
+import com.util.Util;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +19,8 @@ public class ActivityUser {
 
     private String status = "requested";
 
-    private String time_spent;
+    @Column(name="time_spent")
+    private String timeSpent = Util.getFormattedTimeSpent(System.currentTimeMillis());
 
     public ActivityUserId getActivityUserId() {
         return activityUserId;
@@ -36,11 +38,11 @@ public class ActivityUser {
         this.status = status;
     }
 
-    public String getTime_spent() {
-        return time_spent;
+    public String getTimeSpent() {
+        return timeSpent;
     }
 
-    public void setTime_spent(String time_spent) {
-        this.time_spent = time_spent;
+    public void setTime_spent(String timeSpent) {
+        this.timeSpent = timeSpent;
     }
 }

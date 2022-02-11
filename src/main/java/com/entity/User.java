@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,8 +38,8 @@ public class User implements UserDetails {
     @Column(name="total_points")
     private int totalPoints = 0;
 
-    private String role = "user";
-
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Set<Role> role;
 
     public String getName() {
         return name;
@@ -68,16 +69,16 @@ public class User implements UserDetails {
         return activitiesAmount;
     }
 
-    public void setActivitiesAmount(int activities_amount) {
-        this.activitiesAmount = activities_amount;
+    public void setActivitiesAmount(int activitiesAmount) {
+        this.activitiesAmount = activitiesAmount;
     }
 
     public int getRequestsAmount() {
         return requestsAmount;
     }
 
-    public void setRequestsAmount(int requests_amount) {
-        this.requestsAmount = requests_amount;
+    public void setRequestsAmount(int requestsAmount) {
+        this.requestsAmount = requestsAmount;
     }
 
     public String getStatus() {
@@ -92,22 +93,21 @@ public class User implements UserDetails {
         return totalPoints;
     }
 
-    public void setTotalPoints(int total_points) {
-        this.totalPoints = total_points;
+    public void setTotalPoints(int totalPoints) {
+        this.totalPoints = totalPoints;
     }
 
-    public String getRole() {
+    public Set<Role> getRoles() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRoles(Set<Role> role) {
         this.role = role;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return getRoles();
     }
 
     public String getPassword() {
@@ -152,4 +152,5 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

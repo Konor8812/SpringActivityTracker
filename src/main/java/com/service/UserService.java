@@ -2,24 +2,21 @@ package com.service;
 
 
 import com.dto.UserDTO;
+import com.entity.Role;
 import com.entity.User;
 import com.repository.UserRepository;
 
+import com.util.Util;
 import org.apache.log4j.Logger;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.data.jpa.provider.HibernateUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import javax.management.Query;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,13 +28,18 @@ public class UserService implements UserDetailsService {
     UserRepository userRepository;
 
     public boolean saveUser(User user){
-        try {
-            userRepository.save(user);
-            return true;
-        }catch(Exception e){
-            logger.info("user " + user.getName() + " wasn't saved");
+        User userFromDB = userRepository.findByName(user.getName());
+
+        if(userFromDB != null){
             return false;
         }
+
+        user.setRoles(Collections.singleton(new Role(2L, "user")));
+        user.setPassword(Util.bCryptEncode(user.getPassword()));
+
+        userRepository.save(user);
+        return true;
+
     }
 
     public User findByNameAndPass(String name, String pass){
@@ -87,7 +89,7 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public void updateRequestsAmoubt(long userId, boolean increment){
+    public void updateRequestsAmount(long userId, boolean increment){
 
         if(increment){
 
@@ -96,7 +98,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public void updateActivitiesEmount(long userId, boolean increment){
+    public void updateActivitiesAmount(long userId, boolean increment){
 
     }
 

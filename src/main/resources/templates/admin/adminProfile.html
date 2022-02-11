@@ -11,22 +11,22 @@
 </form>
 <hr>
 <p th:text="'You are admin'"></p>
-<form action="/ActivityTracker/changePass" method="post">
+<form action="/changePass" method="get">
     <input type="submit" value="change password?"/>
 </form>
 
-<div th:if="${shouldShowChangePassForm}">
-    <form action="/ActivityTracker/updateUser?update=pass" method="post">
+<div th:if="${shouldShowChangePassField}">
+    <form action="/changePass" method="post">
         <label for="passField" th:text="'Enter new password'">asd</label>
-        <input type="text" id="passField" name="newValue"/>
+        <input type="text" id="passField" name="newPass"/>
         <input type="submit" value="confirm changes"/>
     </form>
 </div>
 
-<div th:if="#{currentUser.emptyEmail}">
-    <form action="/ActivityTracker/updateUser?update=email" method="post">
+<div th:if="${currentUserEmptyEmail}">
+    <form action="/admin/addEmail" method="post">
         <label for="emailField" th:text="'Add email'">asd</label>
-        <input type="text" id="emailField" name="newValue"/>
+        <input type="text" id="emailField" name="email"/>
         <input type="submit" value="confirm changes"/>
     </form>
 </div>

@@ -10,13 +10,15 @@
 <form method="post" action="/logout">
     <input type="submit" value="Log Out">
 </form>
-<hr><br>
+<hr>
 Logged in as admin
-<form method="post" action="/logout">
-    <input type="submit" value="Log Out">
+<form method="get" action="/admin/profile">
+    <input type="submit" value="profile">
 </form>
 <hr>
-<hr>
+<form method="get" action="/admin/activities">
+    <input type="submit" value="activities">
+</form>
 <table>
     <tr>
         <th>name</th>
@@ -34,6 +36,7 @@ Logged in as admin
         <td th:text="${user.activitiesAmount}"> </td>
         <td th:text="${user.requestsAmount}"> </td>
         <td th:text="${user.totalPoints}"> </td>
+        <td> <a href="admin/banUser?userId=${user.id}" th:text="block" > </a></td>
     </tr>
 </table>
 </body>
