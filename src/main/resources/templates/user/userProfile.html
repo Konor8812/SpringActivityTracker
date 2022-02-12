@@ -9,6 +9,9 @@ It's your profile <br>
 <form method="post" action="/logout">
     <input type="submit" value="Log Out">
 </form>
+<form method="get" action="/user/mainUser">
+    <input type="submit" value="back">
+</form>
 <hr>
 <table>
     <tr>
@@ -23,7 +26,7 @@ It's your profile <br>
         <td th:text="${activity.duration}"> </td>
         <td th:text="${activity.reward}"> </td>
         <td th:text="${activity.timeSpent}"></td>
-        <td> <a href="user/userProfile/completedActivity?activityId=${activity.id}" th:text="submit"></a> </td>
+        <td> <a th:href="@{'/user/userProfile/completedActivity?activityId=' + ${activity.id}}" th:text="submit"></a> </td>
     </tr>
 </table>
 </body>

@@ -4,6 +4,7 @@ import com.entity.Activity;
 
 public class ActivityDTO {
 
+    private final long id;
     private final String name;
     private final String duration;
     private final String reward;
@@ -14,6 +15,7 @@ public class ActivityDTO {
     private String status;
 
     private ActivityDTO(Activity activity) {
+        this.id= activity.getId();
         this.name = activity.getName();
         this.duration = activity.getDuration();
         this.reward = activity.getDuration();

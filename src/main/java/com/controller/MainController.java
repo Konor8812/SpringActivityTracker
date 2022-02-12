@@ -66,12 +66,12 @@ public class MainController {
             return "registration";
         }
         System.out.println("user was saved after registration");
-        return "redirect:login";
+        return "redirect:login?error=false";
     }
 
     @GetMapping("/login")
     public String getLoginForm(@RequestParam(name = "error") boolean error, Model model) {
-        System.out.println("getLogin(probably error  " + error + ")");
+
         model.addAttribute("userForm", new User());
         if (error) {
             model.addAttribute("logErrorNoSuchUserFound", true);
@@ -81,47 +81,26 @@ public class MainController {
 
     @GetMapping("/successfulLogin")
     public String loginCheck(Model model, Authentication authResult) {
-        System.out.println("get successfulLogin ");
 
         String role = authResult.getAuthorities().toString();
-        System.out.println("attempt to get user from security context ///");
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("user successfully ejected from security context ///");
 
         if (user.getStatus().equals("blocked")) {
             model.addAttribute("userIsBlocked", true);
             return "login";
         }
 
-        System.out.println("user role  " + user.getRoles());
-        System.out.println("some other role? " + role);
-        model.addAttribute("currentUser", user);
         if (role.contains("user")) {
-            System.out.println("redirect /user");
             return "redirect:user?userId=" + user.getId();
+
         } else if (role.contains("admin")) {
-            System.out.println("redirect /admin");
             return "redirect:admin";
         }
+
         logger.error("Can not identify role, redirect /logout");
         return "redirect:logout";
     }
 
-//    @PostMapping("/updateUser")
-//    public String updateUserPassOrEmail(@RequestParam(name = "update") String fieldToUpdate,
-//                                        @RequestParam(name = "newValue") String value,
-//                                        Model model) {
-//        User user = (User) model.getAttribute("currentUser");
-//        if (fieldToUpdate.equals("password") && InputDataValidator.validatePassword(value)) {
-//            userService.updateUserPass(user.getId(), value);
-//            user.setPassword(value);
-//        } else if (fieldToUpdate.equals("email") && InputDataValidator.validateEmail(value)) {
-//            userService.updateUserEmail(user.getId(), value);
-//            user.setEmail(value);
-//        }
-//
-//        return user.getRoles().toString().contains("user") ? "user/userProfile" : "admin/adminProfile";
-//    }
 
     @GetMapping("/error")
     public String handleError(HttpServletRequest request, Authentication authentication) {

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" th:href="@{/style.css}"/>
+    <link rel="stylesheet" th:href="@{style.css}"/>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
@@ -12,9 +12,10 @@
 <hr>
 
 Logged in as user<br>
-<form method="post" action="/user/profile">
+<form method="get" action="/user/profile">
     <input type="submit" value="profile">
 </form>
+
 <hr>
 <table>
     <tr>
@@ -24,10 +25,10 @@ Logged in as user<br>
         <th>total takes</th>
         <th>
             <div th:if="${!shouldShowTags}">
-                <a href="user/tags?show=true" th:text="'show tags'"></a>
+                <a href="/user?show=true" th:text="'hide tags'"></a>
             </div>
             <div th:if="${shouldShowTags}">
-                <a href="user/tags?show=false" th:text="'hide tags'"></a>
+                <a href="/user?show=false" th:text="'show tags'"></a>
             </div>
         </th>
         <th>take activity!</th>
@@ -42,8 +43,7 @@ Logged in as user<br>
                 <span th:text="${activity.description}"></span>
             </div>
         </td>
-        <td></td>
-        <td><a href="user/reqActivity?activityId=${activity.id}" th:text="take"></a></td>
+        <td><a th:href="@{'/user/reqActivity?activityId=' + ${activity.id}}" th:text="take"></a></td>
     </tr>
 </table>
 </body>

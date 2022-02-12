@@ -30,13 +30,18 @@ Logged in as admin
     </tr>
 
     <tr th:each="user: ${users}">
-        <td th:text="${user.name}"> </td>
-        <td th:text="${user.email}"> </td>
-        <td th:text="${user.status}"> </td>
-        <td th:text="${user.activitiesAmount}"> </td>
-        <td th:text="${user.requestsAmount}"> </td>
-        <td th:text="${user.totalPoints}"> </td>
-        <td> <a href="admin/banUser?userId=${user.id}" th:text="block" > </a></td>
+
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.status}"></td>
+        <td th:text="${user.activitiesAmount}"></td>
+        <td th:text="${user.requestsAmount}"></td>
+        <td th:text="${user.totalPoints}"></td>
+        <td>
+            <div th:if="${user.id != currentUserId}">
+                <a th:href="@{'/admin/banUser?userId=' + ${user.id}}" th:text="block"></a>
+            </div>
+        </td>
     </tr>
 </table>
 </body>

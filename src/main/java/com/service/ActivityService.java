@@ -6,7 +6,6 @@ import com.entity.Activity;
 import com.repository.ActivityRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,14 +28,18 @@ public class ActivityService {
         }
     }
 
-    public List<ActivityDTO> getAllActivitiesList(){
-        List<Activity> activities = activityRepository.findAll();
+    public List<ActivityDTO> getAllActivitiesDTOS(){
+        List<Activity> activities = getAllActivities();
         List<ActivityDTO> dtos = new ArrayList<>();
 
         for(Activity a: activities){
             dtos.add(ActivityDTO.parseActivity(a));
         }
         return  dtos;
+    }
+
+    public List<Activity> getAllActivities(){
+        return activityRepository.findAll();
     }
 
     public void updateRequestedTimesAmount(long activityId){
@@ -51,4 +54,11 @@ public class ActivityService {
         return activityRepository.getActivityDescription(activityId);
     }
 
+    public void deleteActivity(long activityId){
+        activityRepository.deleteById(activityId);
+    }
+
+    public Activity findById(long activityId){
+        return activityRepository.findActivityById(activityId);
+    }
 }

@@ -5,8 +5,41 @@
     <title>Title</title>
 </head>
 <body>
-
-
-
+You are admin
+<form method="get" action="/admin/mainAdmin">
+    <input type="submit" value="back">
+</form>
+<table>
+    <tr>
+        <th>name</th>
+        <th>duration</th>
+        <th>reward</th>
+        <th>taken by amount</th>
+        <th>requested times</th>
+        <th>
+            <div th:if="${!shouldShowTags}">
+            <a href="/user?show=true" th:text="'hide tags'"></a>
+        </div>
+            <div th:if="${shouldShowTags}">
+                <a href="/user?show=false" th:text="'show tags'"></a>
+            </div>
+        </th>
+    </tr>
+    <tr th:each="activity: ${activities}">
+        <td th:text="${activity.name}"></td>
+        <td th:text="${activity.duration}"></td>
+        <td th:text="${activity.reward}"></td>
+        <td th:text="${activity.takenBy}"></td>
+        <td th:text="${activity.requestedTimes}"></td>
+        <td>
+            <div th:if="${shouldShowTags}">
+                <span th:text="${activity.description}"></span>
+            </div>
+        </td>
+        <td>
+            <a th:href="@{'/admin/deleteActivity?activityId=' + ${activity.id}}" th:text="delete" ></a>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

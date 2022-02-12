@@ -28,24 +28,23 @@ public class ActivityUserService {
 
     @Autowired
     UserService userService;
-    public List<ActivityDTO> getAvailableActivities(long userId){
-        List<Activity> alreadyTakenActivities= parseActivitiesFromUserActivity(activityUserRepository.
-                findAllUsersActivities(userId));
 
-        List<Activity> allActivities = activityRepository.findAll();
+    public List<Activity> getAvailableActivities(long userId){
+        List<Activity> alreadyTakenActivities = parseActivitiesFromUserActivity(
+                activityUserRepository.findAllUsersActivities(userId));
+
+        List<Activity> allActivities = activityService.getAllActivities();
         List<Activity> availableActivities = new ArrayList<>();
-        for(Activity a: allActivities){
-            if(!alreadyTakenActivities.contains(a)){
-                availableActivities.add(a);
+        L: for(Activity a: allActivities){
+            for(Activity ac: alreadyTakenActivities){
+                if(a.equals(ac)){
+                   continue L;
+                }
             }
+            availableActivities.add(a);
         }
 
-        List<ActivityDTO> dtos = new ArrayList<>();
-
-        for(Activity a: availableActivities){
-            dtos.add(ActivityDTO.parseActivity(a));
-        }
-        return  dtos;
+        return  availableActivities;
     }
 
     public List<ActivityDTO> getUsersActivities(long userId){
@@ -82,10 +81,12 @@ public class ActivityUserService {
     }
 
     public void activityCompleted(long activityId, long userId){
+        double reward = activityService.findById(activityId).getReward();
+        userService.updateActivitiesAmount(userId, true);
+        userService.updatePointsAmount(userId, reward);
+
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
-
-
-
+        activityUserRepository.deleteById(activityUserId);
     }
 
     public void activityGaveUp(long activityId, long userId){

@@ -1,8 +1,11 @@
 package com.controller;
 
 import com.dto.UserDTO;
+import com.entity.Activity;
 import com.entity.User;
+import com.service.ActivityService;
 import com.service.UserService;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -15,8 +18,13 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private static final Logger logger = Logger.getLogger(AdminController.class);
+
     @Autowired
     UserService userService;
+
+    @Autowired
+    ActivityService activityService;
 
 
     @GetMapping("")
@@ -67,9 +75,22 @@ public class AdminController {
     }
 
     @GetMapping("/activities")
-    public String getActivitities(Model model){
+    public String getActivities(Model model , @RequestParam(name="shouldShowTags") boolean shouldShowTags){
+    List<Activity> activities = activityService.getAllActivities();
+    model.addAttribute("activities", activities);
+    model.addAttribute("shouldShowTags", shouldShowTags);
+    return "admin/adminActivity";
+    }
 
+    @GetMapping("/activities/deleteActivity")
+    public String deleteActivity(@RequestParam(name="activityId") long activityId){
+        activityService.deleteActivity(activityId);
+        return "redirect:admin/activities";
+    }
 
-        return "admin/adminActivities";
+    @GetMapping("/toggleTags")
+    public String toggleTags(@RequestParam(name="shouldShow") boolean shouldShowTags){
+        return "redirect:admin/activities?shouldShowTags=" + shouldShowTags;
+
     }
 }

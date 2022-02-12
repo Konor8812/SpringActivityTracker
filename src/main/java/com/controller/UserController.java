@@ -2,6 +2,7 @@ package com.controller;
 
 
 import com.dto.ActivityDTO;
+import com.entity.Activity;
 import com.entity.ActivityUser;
 import com.entity.User;
 import com.service.ActivityService;
@@ -32,16 +33,18 @@ public class UserController {
     ActivityUserService activityUserService;
 
     @GetMapping("")
-    public String welcomeUser(Model model){
-        User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ActivityDTO> activities = activityUserService.getAvailableActivities(currentUser.getId());
+    public String welcomeUser(Model model,
+                              @RequestParam(name="show") boolean shouldShowTags){
 
-        model.addAttribute("shouldShowTags", true);
+        User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        List<Activity> activities = activityUserService.getAvailableActivities(currentUser.getId());
+
+        model.addAttribute("shouldShowTags", shouldShowTags);
         model.addAttribute("activities", activities);
         return "user/mainUser";
     }
 
-    @GetMapping("reqActivity")
+    @GetMapping("/reqActivity")
     public String reqActivity(@RequestParam(name = "activityId") long activityId){
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.reqActivity(activityId, currentUser.getId());
@@ -49,7 +52,7 @@ public class UserController {
         return "redirect:user/";
     }
 
-    @GetMapping("profile")
+    @GetMapping("/profile")
     public String getProfile(Model model){
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(currentUser.getId());
@@ -59,18 +62,12 @@ public class UserController {
 
     }
 
-    @GetMapping("profile/completedActivity")
+    @GetMapping("/profile/completedActivity")
     public String completedActivity(@RequestParam(name="activityId") long activityId){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityCompleted(activityId, user.getId());
 
-        return "redirect:profile";
+        return "redirect:user/profile";
     }
 
-    @GetMapping("tags")
-    public String changeTagsStatus(@RequestParam(name="show") boolean shouldShow,
-                                   Model model){
-        model.addAttribute("shouldShowTags", shouldShow);
-        return "user/mainUser";
-    }
 }

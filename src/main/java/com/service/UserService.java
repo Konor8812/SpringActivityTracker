@@ -55,7 +55,9 @@ public class UserService implements UserDetailsService {
         List<User> users = userRepository.findAll();
         List<UserDTO> dtos = new ArrayList<>();
         for(User u: users){
-            dtos.add(UserDTO.parseUser(u));
+            if(u.getStatus().equals("available")) {
+                dtos.add(UserDTO.parseUser(u));
+            }
         }
         return dtos;
     }
@@ -103,7 +105,9 @@ public class UserService implements UserDetailsService {
     }
 
     public void updateStatus(long userId, String status){
-
+        User user = userRepository.findById(userId);
+        user.setStatus(status);
+        userRepository.save(user);
     }
 
     public void deleteUser(long userId){
