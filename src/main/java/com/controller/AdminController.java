@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.dto.ActivityDTO;
 import com.dto.UserDTO;
 import com.entity.Activity;
 import com.entity.User;
@@ -76,7 +77,7 @@ public class AdminController {
 
     @GetMapping("/activities")
     public String getActivities(Model model , @RequestParam(name="shouldShowTags") boolean shouldShowTags){
-    List<Activity> activities = activityService.getAllActivities();
+    List<ActivityDTO> activities = activityService.getAllActivitiesWithDescription();
     model.addAttribute("activities", activities);
     model.addAttribute("shouldShowTags", shouldShowTags);
     return "admin/adminActivity";

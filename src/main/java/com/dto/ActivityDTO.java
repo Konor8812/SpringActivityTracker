@@ -62,6 +62,10 @@ public class ActivityDTO {
         return timeSpent;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public void setTimeSpent(String timeSpent) {
         this.timeSpent = timeSpent;
     }

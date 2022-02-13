@@ -7,6 +7,10 @@
 <body>
 <hr>
 Login form
+<form action="/" method="get">
+    <input type="submit" value="back"/>
+</form>
+<hr>
 <form th:method="POST" th:action="@{/login}" th:object="${userForm}">
 
         <label for="login">Enter login(name)</label>

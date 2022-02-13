@@ -17,11 +17,11 @@ You are admin
         <th>taken by amount</th>
         <th>requested times</th>
         <th>
-            <div th:if="${!shouldShowTags}">
-            <a href="/user?show=true" th:text="'hide tags'"></a>
-        </div>
             <div th:if="${shouldShowTags}">
-                <a href="/user?show=false" th:text="'show tags'"></a>
+            <a href="/admin/activities/toggleTags?shouldShow=false" th:text="'hide tags'"></a>
+        </div>
+            <div th:if="${!shouldShowTags}">
+                <a href="/admin/activities/toggleTags?shouldShow=true" th:text="'show tags'"></a>
             </div>
         </th>
     </tr>

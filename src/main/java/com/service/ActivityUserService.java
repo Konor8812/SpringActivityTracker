@@ -29,7 +29,7 @@ public class ActivityUserService {
     @Autowired
     UserService userService;
 
-    public List<Activity> getAvailableActivities(long userId){
+    public List<ActivityDTO> getAvailableActivities(long userId){
         List<Activity> alreadyTakenActivities = parseActivitiesFromUserActivity(
                 activityUserRepository.findAllUsersActivities(userId));
 
@@ -44,7 +44,7 @@ public class ActivityUserService {
             availableActivities.add(a);
         }
 
-        return  availableActivities;
+        return  activityService.getDescriptions(availableActivities);
     }
 
     public List<ActivityDTO> getUsersActivities(long userId){

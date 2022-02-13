@@ -37,7 +37,7 @@ public class UserController {
                               @RequestParam(name="show") boolean shouldShowTags){
 
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Activity> activities = activityUserService.getAvailableActivities(currentUser.getId());
+        List<ActivityDTO> activities = activityUserService.getAvailableActivities(currentUser.getId());
 
         model.addAttribute("shouldShowTags", shouldShowTags);
         model.addAttribute("activities", activities);
@@ -49,7 +49,7 @@ public class UserController {
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.reqActivity(activityId, currentUser.getId());
 
-        return "redirect:user/";
+        return "redirect:/?show=false";
     }
 
     @GetMapping("/profile")

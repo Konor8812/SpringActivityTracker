@@ -91,7 +91,7 @@ public class MainController {
         }
 
         if (role.contains("user")) {
-            return "redirect:user?userId=" + user.getId();
+            return "redirect:user?userId=" + user.getId() + "&show=false";
 
         } else if (role.contains("admin")) {
             return "redirect:admin";

@@ -14,7 +14,7 @@ public interface ActivityRepository extends JpaRepository<Activity, Long>{
 
     public Activity findActivityById(long activityId);
 
-    @Query(value = "SELECT * FROM mydb.activity_description WHERE activity_id = (?)",
+    @Query(value = "SELECT description FROM mydb.activity_description WHERE activity_id = (?)",
             nativeQuery=true)
     public String getActivityDescription(long activityId);
 }

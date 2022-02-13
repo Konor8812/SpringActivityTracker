@@ -2,7 +2,7 @@ package com.util;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class Util {
+public abstract class Util {
 
     public static String bCryptEncode(String s){
         return new BCryptPasswordEncoder().encode(s);
@@ -36,5 +36,9 @@ public class Util {
         }
         System.out.println(sb);
         return sb.toString();
+    }
+
+    public static String formatDescription(String s){
+        return "";
     }
 }

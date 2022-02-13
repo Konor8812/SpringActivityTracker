@@ -6,6 +6,10 @@
 </head>
 <body>
 Registration form
+<form action="/" method="get">
+    <input type="submit" value="back"/>
+</form>
+<hr>
 <form method="post" action="/registration" >
 
     <label for="login">Enter login(name)</label>
@@ -26,5 +30,8 @@ Registration form
 <div th:if="${regErrorInvalidInput}">
 <p style="color:red" th:text="'Invalid data'"></p>
 </div>
+
+<p th:text="'already have an account?'"></p><br>
+GO to login <a href="/login?error=false" th:text="login"></a>
 </body>
 </html>

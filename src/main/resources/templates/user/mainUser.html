@@ -24,11 +24,11 @@ Logged in as user<br>
         <th>reward</th>
         <th>total takes</th>
         <th>
-            <div th:if="${!shouldShowTags}">
-                <a href="/user?show=true" th:text="'hide tags'"></a>
-            </div>
             <div th:if="${shouldShowTags}">
-                <a href="/user?show=false" th:text="'show tags'"></a>
+                <a href="/user?show=false" th:text="'hide tags'"></a>
+            </div>
+            <div th:if="${!shouldShowTags}">
+                <a href="/user?show=true" th:text="'show tags'"></a>
             </div>
         </th>
         <th>take activity!</th>

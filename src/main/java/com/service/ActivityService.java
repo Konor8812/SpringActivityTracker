@@ -28,14 +28,8 @@ public class ActivityService {
         }
     }
 
-    public List<ActivityDTO> getAllActivitiesDTOS(){
-        List<Activity> activities = getAllActivities();
-        List<ActivityDTO> dtos = new ArrayList<>();
-
-        for(Activity a: activities){
-            dtos.add(ActivityDTO.parseActivity(a));
-        }
-        return  dtos;
+    public List<ActivityDTO> getAllActivitiesWithDescription(){
+        return  getDescriptions(getAllActivities());
     }
 
     public List<Activity> getAllActivities(){
@@ -60,5 +54,17 @@ public class ActivityService {
 
     public Activity findById(long activityId){
         return activityRepository.findActivityById(activityId);
+    }
+
+    public List<ActivityDTO> getDescriptions(List<Activity> activities){
+        List<ActivityDTO> dtos = new ArrayList<>();
+
+        for(Activity a: activities){
+            ActivityDTO dto = ActivityDTO.parseActivity(a);
+            dto.setDescription(activityRepository.getActivityDescription(a.getId()));
+
+            dtos.add(dto);
+        }
+        return  dtos;
     }
 }

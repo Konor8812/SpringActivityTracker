@@ -29,6 +29,8 @@ public class Activity {
     @Column(name="requested_times")
     private int requestedTimes = 0;
 
+    //private String description;
+
     public long getId() {
         return id;
     }

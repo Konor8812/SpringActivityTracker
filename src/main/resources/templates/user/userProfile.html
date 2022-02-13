@@ -9,7 +9,7 @@ It's your profile <br>
 <form method="post" action="/logout">
     <input type="submit" value="Log Out">
 </form>
-<form method="get" action="/user/mainUser">
+<form method="get" action="/user?show=false">
     <input type="submit" value="back">
 </form>
 <hr>
@@ -25,7 +25,14 @@ It's your profile <br>
         <td th:text="${activity.name}"> </td>
         <td th:text="${activity.duration}"> </td>
         <td th:text="${activity.reward}"> </td>
-        <td th:text="${activity.timeSpent}"></td>
+        <td>
+            <div th:if="${activity.status == 'inProcess'}">
+                <span th:text="${activity.timeSpent}"></span>
+            </div>
+            <div th:if="${activity.status != 'inProcess'}">
+                <span th:text="0"></span>
+            </div>
+        </td>
         <td> <a th:href="@{'/user/userProfile/completedActivity?activityId=' + ${activity.id}}" th:text="submit"></a> </td>
     </tr>
 </table>
