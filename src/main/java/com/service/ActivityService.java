@@ -28,25 +28,22 @@ public class ActivityService {
         }
     }
 
-    public List<ActivityDTO> getAllActivitiesWithDescription(){
-        return  getDescriptions(getAllActivities());
-    }
-
     public List<Activity> getAllActivities(){
         return activityRepository.findAll();
     }
 
     public void updateRequestedTimesAmount(long activityId){
-
+        Activity ac = activityRepository.findActivityById(activityId);
+        ac.setRequestedTimes(ac.getRequestedTimes() + 1);
+        activityRepository.save(ac);
     }
 
     public void updateTakesAmount(long activityId){
-
+        Activity ac = activityRepository.findActivityById(activityId);
+        ac.setRequestedTimes(ac.getTakenBy() + 1);
+        activityRepository.save(ac);
     }
 
-    public String getActivityDescription(long activityId){
-        return activityRepository.getActivityDescription(activityId);
-    }
 
     public void deleteActivity(long activityId){
         activityRepository.deleteById(activityId);
@@ -56,15 +53,14 @@ public class ActivityService {
         return activityRepository.findActivityById(activityId);
     }
 
-    public List<ActivityDTO> getDescriptions(List<Activity> activities){
+    // is this method needed ?
+    public List<ActivityDTO> parseActivitiesList(List<Activity> activities){
         List<ActivityDTO> dtos = new ArrayList<>();
 
         for(Activity a: activities){
-            ActivityDTO dto = ActivityDTO.parseActivity(a);
-            dto.setDescription(activityRepository.getActivityDescription(a.getId()));
-
-            dtos.add(dto);
+            dtos.add(ActivityDTO.parseActivity(a));
         }
-        return  dtos;
+        return dtos;
     }
+
 }

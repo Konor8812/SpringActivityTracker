@@ -28,18 +28,23 @@ Logged in as admin
         <th>requests amount</th>
         <th>total points</th>
     </tr>
-
     <tr th:each="user: ${users}">
-
         <td th:text="${user.name}"></td>
         <td th:text="${user.email}"></td>
         <td th:text="${user.status}"></td>
         <td th:text="${user.activitiesAmount}"></td>
-        <td th:text="${user.requestsAmount}"></td>
+        <td>
+            <div th:if="${user.requestsAmount > 0}">
+                <a th:href="@{'/admin/userRequests?userId=' + ${user.id}}" th:text="${user.requestsAmount}"></a>
+            </div>
+            <div th:if="${user.activitiesAmount == 0}">
+                <span th:text="${user.requestsAmount}"></span>
+            </div>
+        </td>
         <td th:text="${user.totalPoints}"></td>
         <td>
             <div th:if="${user.id != currentUserId}">
-                <a th:href="@{'/admin/banUser?userId=' + ${user.id}}" th:text="block"></a>
+                <a th:href="@{'/admin/banUser?userId=' + ${user.id}}" th:text="'block?'"></a>
             </div>
         </td>
     </tr>

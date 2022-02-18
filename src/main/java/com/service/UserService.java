@@ -42,6 +42,10 @@ public class UserService implements UserDetailsService {
 
     }
 
+    public User findUserById(long userId){
+        return userRepository.findById(userId);
+    }
+
     public User findByNameAndPass(String name, String pass){
         User user = userRepository.findByName(name);
         if(user != null && user.getPassword().equals(pass)){

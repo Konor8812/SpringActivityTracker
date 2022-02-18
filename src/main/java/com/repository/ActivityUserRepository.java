@@ -9,9 +9,11 @@ import java.util.List;
 
 public interface ActivityUserRepository extends JpaRepository<ActivityUser, ActivityUserId> {
 
-    List<ActivityUser> findByActivityUserId(ActivityUserId activityUserId);
+    ActivityUser findByActivityUserId(ActivityUserId activityUserId);
 
-    @Query(value = "SELECT * FROM mydb.user_has_activity WHERE user_id = (?)",
-    nativeQuery = true)
+    @Query(value = "SELECT * FROM mydb.user_has_activity WHERE user_id = (?)", nativeQuery = true)
     List<ActivityUser> findAllUsersActivities(long userId);
+
+    @Query(value = "select activity_id from mydb.user_has_activity where user_id = (?) and status = 'requested'", nativeQuery = true)
+    List<Long> getRequestedActivitiesIds(long userId);
 }

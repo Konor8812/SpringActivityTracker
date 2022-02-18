@@ -70,8 +70,7 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String getLoginForm(@RequestParam(name = "error") boolean error, Model model) {
-
+    public String loginForm(@RequestParam(name = "error") boolean error, Model model) {
         model.addAttribute("userForm", new User());
         if (error) {
             model.addAttribute("logErrorNoSuchUserFound", true);
@@ -87,7 +86,7 @@ public class MainController {
 
         if (user.getStatus().equals("blocked")) {
             model.addAttribute("userIsBlocked", true);
-            return "login";
+            return "/login";
         }
 
         if (role.contains("user")) {

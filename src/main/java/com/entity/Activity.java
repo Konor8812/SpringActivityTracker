@@ -29,7 +29,9 @@ public class Activity {
     @Column(name="requested_times")
     private int requestedTimes = 0;
 
-    //private String description;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="activity_description_id")
+    private Description description;
 
     public long getId() {
         return id;
@@ -91,5 +93,17 @@ public class Activity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name);
+    }
+
+    public void setReward(double reward) {
+        this.reward = reward;
+    }
+
+    public Description getDescription() {
+        return description;
+    }
+
+    public void setDescription(Description description) {
+        this.description = description;
     }
 }

@@ -9,5 +9,9 @@
 Welcome! <br>
 GO to registration <a href="/registration" th:text="registrate"></a>   <br><br>
 GO to login <a href="/login?error=false" th:text="login"></a>
+
+<div th:if="${userIsBlocked}">
+    <span style="color:red" th:text="'you are banned by admin!'"></span>
+</div>
 </body>
 </html>

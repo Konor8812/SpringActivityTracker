@@ -1,6 +1,7 @@
 package com.dto;
 
 import com.entity.Activity;
+import com.entity.Description;
 
 public class ActivityDTO {
 
@@ -10,7 +11,7 @@ public class ActivityDTO {
     private final String reward;
     private final int takenBy;
 
-    private String description;
+    private Description description;
     private String timeSpent;
     private String status;
 
@@ -20,17 +21,18 @@ public class ActivityDTO {
         this.duration = activity.getDuration();
         this.reward = activity.getDuration();
         this.takenBy = activity.getTakenBy();
+        this.description = activity.getDescription();
     }
 
     public String getStatus() {
         return status;
     }
 
-    public String getDescription() {
+    public Description getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(Description description) {
         this.description = description;
     }
 

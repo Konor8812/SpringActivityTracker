@@ -29,22 +29,22 @@ public class ActivityUserService {
     @Autowired
     UserService userService;
 
-    public List<ActivityDTO> getAvailableActivities(long userId){
+    public List<Activity> getAvailableActivities(long userId){
         List<Activity> alreadyTakenActivities = parseActivitiesFromUserActivity(
                 activityUserRepository.findAllUsersActivities(userId));
 
         List<Activity> allActivities = activityService.getAllActivities();
         List<Activity> availableActivities = new ArrayList<>();
-        L: for(Activity a: allActivities){
-            for(Activity ac: alreadyTakenActivities){
-                if(a.equals(ac)){
-                   continue L;
+        L: for(Activity a: allActivities) {
+            for (Activity ac : alreadyTakenActivities) {
+                if (a.equals(ac)) {
+                    continue L;
                 }
             }
             availableActivities.add(a);
         }
 
-        return  activityService.getDescriptions(availableActivities);
+        return availableActivities;
     }
 
     public List<ActivityDTO> getUsersActivities(long userId){
@@ -61,6 +61,7 @@ public class ActivityUserService {
         return dtos;
     }
 
+    // requestsAmount + 1; requstedTimes + 1;
     public void reqActivity(long activityId, long userId) {
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         ActivityUser activityUser = new ActivityUser();
@@ -68,18 +69,23 @@ public class ActivityUserService {
         activityUserRepository.save(activityUser);
     }
 
+    // requestsAmount -1; taken_by amount + 1;
     public void approveActivityForUser(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
-
-
+        ActivityUser au = activityUserRepository.findByActivityUserId(activityUserId);
+        au.setStatus("in process");
+        au.setTime_spent(String.valueOf(System.currentTimeMillis()));
+        activityUserRepository.save(au);
     }
 
+    // requestsAmount -1;
     public void denyApproval(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
-
-
+        activityUserRepository.deleteById(activityUserId);
+        userService.updateRequestsAmount(activityId, false);
     }
 
+    // points + ; activitiesAmount + 1;
     public void activityCompleted(long activityId, long userId){
         double reward = activityService.findById(activityId).getReward();
         userService.updateActivitiesAmount(userId, true);
@@ -88,21 +94,34 @@ public class ActivityUserService {
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         activityUserRepository.deleteById(activityUserId);
     }
-
+    // points - /0.5;
     public void activityGaveUp(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
+        activityUserRepository.deleteById(activityUserId);
+        double points = activityService.findById(activityId).getReward();
+        userService.updatePointsAmount(userId, points / 2);
 
     }
 
     public List<Activity> parseActivitiesFromUserActivity(List<ActivityUser> list){
         List<Activity> activities = new ArrayList<>();
         for(ActivityUser au: list){
-            activities.add(activityRepository.findActivityById(au.getActivityUserId().getActivityId()));
+            activities.add(parseActivityFromUserActivity(au));
         }
         return activities;
     }
 
-    public Activity parseActivityFromUserActivity(ActivityUser activityUser) {
+    private Activity parseActivityFromUserActivity(ActivityUser activityUser) {
         return activityRepository.findActivityById(activityUser.getActivityUserId().getActivityId());
+    }
+
+    public List<ActivityDTO> getUsersRequests(long userId){
+        List<Long> list = activityUserRepository.getRequestedActivitiesIds(userId);
+        List<Activity> activities = new ArrayList<>();
+
+        for(long l: list) {
+            activities.add(activityService.findById(l));
+        }
+        return activityService.parseActivitiesList(activities);
     }
 }

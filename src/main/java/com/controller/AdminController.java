@@ -5,6 +5,7 @@ import com.dto.UserDTO;
 import com.entity.Activity;
 import com.entity.User;
 import com.service.ActivityService;
+import com.service.ActivityUserService;
 import com.service.UserService;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class AdminController {
     @Autowired
     ActivityService activityService;
 
+    @Autowired
+    ActivityUserService activityUserService;
 
     @GetMapping("")
     public String welcomeAdmin(Model model) {
@@ -77,7 +80,7 @@ public class AdminController {
 
     @GetMapping("/activities")
     public String getActivities(Model model , @RequestParam(name="shouldShowTags") boolean shouldShowTags){
-    List<ActivityDTO> activities = activityService.getAllActivitiesWithDescription();
+    List<Activity> activities = activityService.getAllActivities();
     model.addAttribute("activities", activities);
     model.addAttribute("shouldShowTags", shouldShowTags);
     return "admin/adminActivity";
@@ -94,4 +97,28 @@ public class AdminController {
         return "redirect:admin/activities?shouldShowTags=" + shouldShowTags;
 
     }
+
+    @GetMapping("/userRequests")
+    public String getUsersRequests(@RequestParam(name="userId") long userId, Model model){
+        List<ActivityDTO> usersActivities = activityUserService.getUsersRequests(userId);
+        model.addAttribute("usersActivities", usersActivities);
+        User user = userService.findUserById(userId);
+        model.addAttribute("user", user);
+        return "admin/userRequests";
+    }
+
+    @GetMapping("/userRequests/denyOrApproveActivity")
+    public String approveActivity(@RequestParam(name="userId") long userId,
+                                  @RequestParam(name="activityId") long activityId,
+                                  @RequestParam(name="approve") boolean approve){
+        if(approve){
+            activityUserService.approveActivityForUser(activityId, userId);
+        }else {
+            activityUserService.denyApproval(activityId, userId);
+        }
+        return "redirect:admin/userRequests?userId=" + userId;
+    }
+
+
+
 }
