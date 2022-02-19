@@ -2,25 +2,26 @@
 <html lang="en">
 <head xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8">
-    <title>Profile</title>
+    <title>Admin profile</title>
 </head>
 <body>
+<span th:text="'Welcome, dear administrator, it\'s your profile'" ></span><br>
 <hr>
 <form method="post" action="/logout">
     <input type="submit" value="Log Out">
 </form>
-<form method="get" action="/admin/mainAdmin">
+<form method="get" action="/admin">
     <input type="submit" value="back">
 </form>
 <hr>
 <p th:text="'You are admin'"></p>
-<form action="/changePass" method="get">
+<form th:action="@{'/admin/changePassword'}" th:method="GET">
     <input type="submit" value="change password?"/>
 </form>
-
+<br>
 <div th:if="${shouldShowChangePassField}">
-    <form action="/changePass" method="post">
-        <label for="passField" th:text="'Enter new password'">asd</label>
+    <form th:action="@{'/admin/changePassword'}" th:method="POST">
+        <label for="passField" th:text="'Enter new password'"></label>
         <input type="text" id="passField" name="newPass"/>
         <input type="submit" value="confirm changes"/>
     </form>

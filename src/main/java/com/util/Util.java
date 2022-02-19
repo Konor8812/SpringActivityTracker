@@ -34,7 +34,6 @@ public abstract class Util {
         if (seconds != 0) {
             sb.append(seconds).append(" seconds ");
         }
-        System.out.println(sb);
         return sb.toString();
     }
 

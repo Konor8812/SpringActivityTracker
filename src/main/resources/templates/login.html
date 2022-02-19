@@ -22,10 +22,13 @@ Login form
         <input type="submit" value="Submit"/>
 </form>
 
+<div th:if="${userIsBlocked}">
+    <span style="color:red" th:text="'you are banned by admin!'"></span>
+</div>
+
 <div th:if="${logErrorNoSuchUserFound}">
     <p th:text="'no user with such creditials found'"></p>
 </div>
-
 
 </body>
 </html>

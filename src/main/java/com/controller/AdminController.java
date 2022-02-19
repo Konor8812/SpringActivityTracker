@@ -36,6 +36,8 @@ public class AdminController {
         List<UserDTO> users = userService.getAllUsersList();
         model.addAttribute("users", users);
 
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.info("Admin authenticated, id = " + user.getId() + ", name = " + user.getName());
         return "admin/mainAdmin";
     }
 
@@ -50,24 +52,24 @@ public class AdminController {
         return "admin/adminProfile";
     }
 
-    @GetMapping("/changePass")
+    @GetMapping("/changePassword")
     public String showUpdatePassField(Model model) {
         model.addAttribute("shouldShowChangePassField", true);
         return "admin/adminProfile";
     }
 
-    @PostMapping("/changePass")
+    @PostMapping("/changePassword")
     public String changePass(@RequestParam(name = "newPass") String newPassword) {
         User user =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.updateUserPass(user.getId(), newPassword);
 
-        return "redirect:profile";
+        return "redirect:admin/profile";
     }
 
     @GetMapping("/banUser")
     public String banUser(long userId) {
         userService.updateStatus(userId, "blocked");
-        return "redirect:/";
+        return "redirect:admin";
     }
 
 
@@ -119,6 +121,11 @@ public class AdminController {
         return "redirect:admin/userRequests?userId=" + userId;
     }
 
+    @GetMapping("/deleteUser")
+    public String deleteUser(@RequestParam(name = "userId") long userId){
+        userService.deleteUser(userId);
+        return "redirect:/admin";
+    }
 
 
 }

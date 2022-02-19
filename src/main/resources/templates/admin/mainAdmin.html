@@ -2,7 +2,7 @@
 <html lang="en">
 <head xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Admin main page</title>
     <link rel="stylesheet" th:href="@{/style.css}"/>
 </head>
 <body>
@@ -45,6 +45,11 @@ Logged in as admin
         <td>
             <div th:if="${user.id != currentUserId}">
                 <a th:href="@{'/admin/banUser?userId=' + ${user.id}}" th:text="'block?'"></a>
+            </div>
+        </td>
+        <td>
+            <div th:if="${user.role != 'admin'}">
+                <a th:href="@{'/admin/deleteUser?userId=' + ${user.id}}" th:text="'delete?'"></a>
             </div>
         </td>
     </tr>

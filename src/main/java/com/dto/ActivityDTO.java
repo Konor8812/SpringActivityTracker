@@ -8,7 +8,7 @@ public class ActivityDTO {
     private final long id;
     private final String name;
     private final String duration;
-    private final String reward;
+    private final double reward;
     private final int takenBy;
 
     private Description description;
@@ -19,7 +19,7 @@ public class ActivityDTO {
         this.id= activity.getId();
         this.name = activity.getName();
         this.duration = activity.getDuration();
-        this.reward = activity.getDuration();
+        this.reward = activity.getReward();
         this.takenBy = activity.getTakenBy();
         this.description = activity.getDescription();
     }
@@ -52,7 +52,7 @@ public class ActivityDTO {
         return duration;
     }
 
-    public String getReward() {
+    public double getReward() {
         return reward;
     }
 

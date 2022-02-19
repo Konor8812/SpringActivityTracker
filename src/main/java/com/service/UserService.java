@@ -27,10 +27,10 @@ public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
 
-    public boolean saveUser(User user){
+    public boolean saveUser(User user) {
         User userFromDB = userRepository.findByName(user.getName());
 
-        if(userFromDB != null){
+        if (userFromDB != null) {
             return false;
         }
 
@@ -42,24 +42,15 @@ public class UserService implements UserDetailsService {
 
     }
 
-    public User findUserById(long userId){
+    public User findUserById(long userId) {
         return userRepository.findById(userId);
     }
 
-    public User findByNameAndPass(String name, String pass){
-        User user = userRepository.findByName(name);
-        if(user != null && user.getPassword().equals(pass)){
-            return user;
-        }else{
-            return null;
-        }
-    }
-
-    public List<UserDTO> getAllUsersList(){
+    public List<UserDTO> getAllUsersList() {
         List<User> users = userRepository.findAll();
         List<UserDTO> dtos = new ArrayList<>();
-        for(User u: users){
-            if(u.getStatus().equals("available")) {
+        for (User u : users) {
+            if (u.getStatus().equals("available")) {
                 dtos.add(UserDTO.parseUser(u));
             }
         }
@@ -82,39 +73,40 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         User user = userRepository.findByName(name);
 
-        if(user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("user " + name + " wasn't found");
         }
 
         return user;
     }
 
-    public void updatePointsAmount(long userId, double points){
+    public void updatePointsAmount(long userId, double points) {
+        User user = findUserById(userId);
+        user.setTotalPoints(user.getTotalPoints() + points);
 
+        userRepository.save(user);
+    }
 
+    public void updateRequestsAmount(long userId, boolean increment) {
+        User user = findUserById(userId);
+        user.setRequestsAmount(increment ? user.getRequestsAmount() + 1 : user.getRequestsAmount() - 1);
+        userRepository.save(user);
 
     }
 
-    public void updateRequestsAmount(long userId, boolean increment){
-
-        if(increment){
-
-        } else{
-
-        }
+    public void updateActivitiesAmount(long userId) {
+        User user = findUserById(userId);
+        user.setActivitiesAmount(user.getActivitiesAmount() + 1);
+        userRepository.save(user);
     }
 
-    public void updateActivitiesAmount(long userId, boolean increment){
-
-    }
-
-    public void updateStatus(long userId, String status){
+    public void updateStatus(long userId, String status) {
         User user = userRepository.findById(userId);
         user.setStatus(status);
         userRepository.save(user);
     }
 
-    public void deleteUser(long userId){
-
+    public void deleteUser(long userId) {
+        userRepository.deleteById(userId);
     }
 }

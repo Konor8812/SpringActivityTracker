@@ -10,9 +10,9 @@ public class UserDTO {
     private final String email;
     private final int activitiesAmount;
     private final int requestsAmount;
-    private final int totalPoints;
+    private final double totalPoints;
 
-    private String role;
+    private final String role;
 
 
     private UserDTO(User user) {
@@ -23,6 +23,8 @@ public class UserDTO {
         this.requestsAmount = user.getRequestsAmount();
         this.totalPoints = user.getTotalPoints();
         this.status = user.getStatus();
+
+        this.role = user.getRoles().toString().contains("user") ? "user" : "admin";
     }
 
     public String getStatus() {
@@ -49,11 +51,16 @@ public class UserDTO {
         return requestsAmount;
     }
 
-    public int getTotalPoints() {
+    public double getTotalPoints() {
         return totalPoints;
     }
 
     public long getId() {
         return id;
     }
+
+    public String getRole() {
+        return role;
+    }
+
 }

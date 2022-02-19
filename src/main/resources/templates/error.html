@@ -6,5 +6,11 @@
 </head>
 <body>
 nu huevo vse
+
+<div th:if="${userIsBlocked}">
+    <span style="color:red" th:text="'you are banned by admin!'"></span>
+</div>
+<br>
+<span><a th:href="@{'/logout'}" th:text="'back to main'"></a></span>
 </body>
 </html>

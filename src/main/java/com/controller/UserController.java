@@ -34,7 +34,7 @@ public class UserController {
 
     @GetMapping("")
     public String welcomeUser(Model model,
-                              @RequestParam(name="show") boolean shouldShowTags){
+                              @RequestParam(name="show", required = false) boolean shouldShowTags){
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Activity> activities = activityUserService.getAvailableActivities(currentUser.getId());
 
@@ -47,8 +47,7 @@ public class UserController {
     public String reqActivity(@RequestParam(name = "activityId") long activityId){
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.reqActivity(activityId, currentUser.getId());
-
-        return "redirect:user?show=false";
+        return "redirect:user/profile";
     }
 
     @GetMapping("/profile")
@@ -56,6 +55,7 @@ public class UserController {
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(currentUser.getId());
         model.addAttribute("usersActivities", usersActivities);
+        model.addAttribute("user", currentUser);
 
         return "user/userProfile";
 
@@ -66,6 +66,13 @@ public class UserController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityCompleted(activityId, user.getId());
 
+        return "redirect:user/profile";
+    }
+
+    @GetMapping("/profile/gaveUpActivity")
+    public String activityGaveUp(@RequestParam(name = "activityId") long activityId){
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        activityUserService.activityGaveUp(activityId, user.getId());
         return "redirect:user/profile";
     }
 

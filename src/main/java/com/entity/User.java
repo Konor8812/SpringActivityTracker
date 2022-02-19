@@ -36,7 +36,7 @@ public class User implements UserDetails {
     private String status = "available";
 
     @Column(name="total_points")
-    private int totalPoints = 0;
+    private double totalPoints = 0;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> role;
@@ -89,11 +89,11 @@ public class User implements UserDetails {
         this.status = status;
     }
 
-    public int getTotalPoints() {
+    public double getTotalPoints() {
         return totalPoints;
     }
 
-    public void setTotalPoints(int totalPoints) {
+    public void setTotalPoints(double totalPoints) {
         this.totalPoints = totalPoints;
     }
 

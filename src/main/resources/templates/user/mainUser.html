@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" th:href="@{style.css}"/>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>User main page</title>
 </head>
 <body>
 <form method="post" action="/logout">
     <input type="submit" value="Log Out">
 </form>
 <hr>
-
-Logged in as user<br>
+Logged in as user
+<br>
 <form method="get" action="/user/profile">
     <input type="submit" value="profile">
 </form>

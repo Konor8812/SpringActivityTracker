@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Users profile</title>
+    <link rel="stylesheet" th:href="@{/style.css}"/>
 </head>
 <body>
-It's your profile <br>
+<span style="color:darkgreen"  th:text="'Welcome, ' + ${user.name} + ', it\'s your profile'" ></span><br>
+<span style="color: darkviolet" th:text="'Currently you have ' + ${user.activitiesAmount} + ' activities and ' + ${user.requestsAmount} + ' requests'"></span><br>
+<span style="color: darkmagenta" th:text="'You have earned ' + ${user.totalPoints} + ' points'"></span><br>
+<hr>
 <form method="post" action="/logout">
     <input type="submit" value="Log Out">
 </form>
-<form method="get" action="/user/?show=false">
+<form th:method="GET" th:action="@{'/user'}">
     <input type="submit" value="back">
 </form>
 <hr>
@@ -33,7 +37,10 @@ It's your profile <br>
                 <span th:text="0"></span>
             </div>
         </td>
-        <td> <a th:href="@{'/user/userProfile/completedActivity?activityId=' + ${activity.id}}" th:text="submit"></a> </td>
+        <div th:if="${activity.status == 'inProcess'}">
+        <td> <a th:href="@{'/user/userProfile/completedActivity?activityId=' + ${activity.id}}" th:text="'submit'"></a> </td>
+        <td> <a th:href="@{'/user/userProfile/gaveUpActivity?activityId=' + ${activity.id}}" th:text="'give up'"></a> </td>
+        </div>
     </tr>
 </table>
 </body>

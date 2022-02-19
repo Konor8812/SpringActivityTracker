@@ -12,11 +12,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+
 
 @Controller
 public class MainController {
@@ -47,7 +46,7 @@ public class MainController {
                                     @RequestParam(name = "password") String password,
                                     @RequestParam(name = "email", required = false) String email,
                                     Model model) {
-        System.out.println("post registration");
+
         if (!InputDataValidator.validateLoginInput(login, password, email)) {
             model.addAttribute("regErrorInvalidInput", true);
             return "registration";
@@ -65,7 +64,7 @@ public class MainController {
             model.addAttribute("regErrorUserExists", true);
             return "registration";
         }
-        System.out.println("user was saved after registration");
+        logger.info("New user was saved, user id = " + user.getId());
         return "redirect:login?error=false";
     }
 
@@ -90,9 +89,11 @@ public class MainController {
         }
 
         if (role.contains("user")) {
+            logger.info("User authenticated, id = " + user.getId() + ", name = " + user.getName());
             return "redirect:user?userId=" + user.getId() + "&show=false";
 
         } else if (role.contains("admin")) {
+            logger.info("Admin authenticated, id = " + user.getId() + ", name = " + user.getName());
             return "redirect:admin";
         }
 
