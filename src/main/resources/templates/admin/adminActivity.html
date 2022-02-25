@@ -18,10 +18,10 @@ You are admin
         <th>requested times</th>
         <th>
             <div th:if="${shouldShowTags}">
-            <a href="/admin/activities/toggleTags?shouldShow=false" th:text="'hide tags'"></a>
+            <a href="/admin/activities?show=false" th:text="'hide tags'"></a>
         </div>
             <div th:if="${!shouldShowTags}">
-                <a href="/admin/activities/toggleTags?shouldShow=true" th:text="'show tags'"></a>
+                <a href="/admin/activities?show=true" th:text="'show tags'"></a>
             </div>
         </th>
     </tr>
@@ -37,9 +37,17 @@ You are admin
             </div>
         </td>
         <td>
-            <a th:href="@{'/admin/deleteActivity?activityId=' + ${activity.id}}" th:text="delete" ></a>
+            <a th:href="@{'/admin/activities/deleteActivity?activityId=' + ${activity.id}}" th:text="delete" ></a>
         </td>
     </tr>
 </table>
+
+<form action="admin/activities/addNewActivity" method="post">
+    <label for="name" th:text="'Enter activityName'"
+
+
+</form>
+
+
 </body>
 </html>

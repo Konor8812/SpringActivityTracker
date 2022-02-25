@@ -50,16 +50,15 @@ public class UserService implements UserDetailsService {
         List<User> users = userRepository.findAll();
         List<UserDTO> dtos = new ArrayList<>();
         for (User u : users) {
-            if (u.getStatus().equals("available")) {
-                dtos.add(UserDTO.parseUser(u));
-            }
+            dtos.add(UserDTO.parseUser(u));
         }
         return dtos;
     }
 
     public void updateUserPass(long id, String value) {
         User user = userRepository.findById(id);
-        user.setPassword(value);
+        String encodedPass = Util.bCryptEncode(value);
+        user.setPassword(encodedPass);
         userRepository.save(user);
     }
 

@@ -16,4 +16,7 @@ public interface ActivityUserRepository extends JpaRepository<ActivityUser, Acti
 
     @Query(value = "select activity_id from mydb.user_has_activity where user_id = (?) and status = 'requested'", nativeQuery = true)
     List<Long> getRequestedActivitiesIds(long userId);
+
+    @Query(value = "select user_id from mydb.user_has_activity where activity_id = (?) and status = 'requested'", nativeQuery = true)
+    List<Long> getUsersWithRequestId(long activityId);
 }

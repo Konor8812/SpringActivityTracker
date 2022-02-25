@@ -36,9 +36,21 @@ public class AdminController {
         List<UserDTO> users = userService.getAllUsersList();
         model.addAttribute("users", users);
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        logger.info("Admin authenticated, id = " + user.getId() + ", name = " + user.getName());
         return "admin/mainAdmin";
+    }
+
+    @GetMapping("/banUser")
+    public String banUser(@RequestParam(name = "shouldBan") boolean ban,
+                          @RequestParam(name ="userId") long userId,
+                          Model model) {
+        String status;
+        if(ban){
+            status = "blocked";
+        }else{
+            status = "available";
+        }
+        userService.updateStatus(userId, status);
+        return welcomeAdmin(model);
     }
 
     @GetMapping("/profile")
@@ -54,34 +66,34 @@ public class AdminController {
 
     @GetMapping("/changePassword")
     public String showUpdatePassField(Model model) {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+            model.addAttribute("currentUserEmptyEmail", true);
+        }
         model.addAttribute("shouldShowChangePassField", true);
         return "admin/adminProfile";
     }
 
     @PostMapping("/changePassword")
-    public String changePass(@RequestParam(name = "newPass") String newPassword) {
+    public String changePass(@RequestParam(name = "newPass") String newPassword, Model model) {
         User user =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.updateUserPass(user.getId(), newPassword);
 
-        return "redirect:admin/profile";
+        return getProfile(model);
     }
-
-    @GetMapping("/banUser")
-    public String banUser(long userId) {
-        userService.updateStatus(userId, "blocked");
-        return "redirect:admin";
-    }
-
 
     @PostMapping("/addEmail")
-    public String addEmail(@RequestParam(name = "email") String email) {
+    public String addEmail(@RequestParam(name = "email") String email, Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.updateUserEmail(user.getId(), email);
-        return "redirect:profile";
+        return getProfile(model);
     }
 
+
     @GetMapping("/activities")
-    public String getActivities(Model model , @RequestParam(name="shouldShowTags") boolean shouldShowTags){
+    public String getActivities(Model model,
+                                @RequestParam(name="show", required=false) boolean shouldShowTags){
     List<Activity> activities = activityService.getAllActivities();
     model.addAttribute("activities", activities);
     model.addAttribute("shouldShowTags", shouldShowTags);
@@ -89,27 +101,23 @@ public class AdminController {
     }
 
     @GetMapping("/activities/deleteActivity")
-    public String deleteActivity(@RequestParam(name="activityId") long activityId){
+    public String deleteActivity(@RequestParam(name="activityId") long activityId, Model model){
         activityService.deleteActivity(activityId);
-        return "redirect:admin/activities";
+        return getActivities(model, false);
     }
 
-    @GetMapping("/toggleTags")
-    public String toggleTags(@RequestParam(name="shouldShow") boolean shouldShowTags){
-        return "redirect:admin/activities?shouldShowTags=" + shouldShowTags;
-
-    }
-
-    @GetMapping("/userRequests")
-    public String getUsersRequests(@RequestParam(name="userId") long userId, Model model){
+    @GetMapping("/usersStats")
+    public String getUsersRequests(@RequestParam(name="userId") long userId,
+                                   Model model)
+    {
         List<ActivityDTO> usersActivities = activityUserService.getUsersRequests(userId);
         model.addAttribute("usersActivities", usersActivities);
         User user = userService.findUserById(userId);
         model.addAttribute("user", user);
-        return "admin/userRequests";
+        return "admin/userStatistics";
     }
 
-    @GetMapping("/userRequests/denyOrApproveActivity")
+    @GetMapping("/usersStats/denyOrApproveActivity")
     public String approveActivity(@RequestParam(name="userId") long userId,
                                   @RequestParam(name="activityId") long activityId,
                                   @RequestParam(name="approve") boolean approve){
@@ -121,10 +129,10 @@ public class AdminController {
         return "redirect:admin/userRequests?userId=" + userId;
     }
 
-    @GetMapping("/deleteUser")
+    @GetMapping("/usersStats/deleteUser")
     public String deleteUser(@RequestParam(name = "userId") long userId){
         userService.deleteUser(userId);
-        return "redirect:/admin";
+        return "redirect:admin";
     }
 
 

@@ -3,11 +3,11 @@ package com.controller;
 
 import com.dto.ActivityDTO;
 import com.entity.Activity;
-import com.entity.ActivityUser;
 import com.entity.User;
 import com.service.ActivityService;
 import com.service.ActivityUserService;
 import com.service.UserService;
+import com.validator.InputDataValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -44,10 +44,10 @@ public class UserController {
     }
 
     @GetMapping("/reqActivity")
-    public String reqActivity(@RequestParam(name = "activityId") long activityId){
+    public String requestActivity(@RequestParam(name = "activityId") long activityId, Model model){
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.reqActivity(activityId, currentUser.getId());
-        return "redirect:user/profile";
+        return welcomeUser(model, false);
     }
 
     @GetMapping("/profile")
@@ -74,6 +74,18 @@ public class UserController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityGaveUp(activityId, user.getId());
         return "redirect:user/profile";
+    }
+
+    @PostMapping("profile/addEmail")
+    public String addUsersEmail(@RequestParam(name="userId") long userId,
+            @RequestParam(name = "value") String str,
+                                Model model) {
+        if (InputDataValidator.validateEmail(str)) {
+            userService.updateUserEmail(userId, str);
+        } else {
+            model.addAttribute("wrongEmailFormat", true);
+        }
+        return getProfile(model);
     }
 
 }

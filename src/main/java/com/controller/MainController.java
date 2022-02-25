@@ -64,36 +64,41 @@ public class MainController {
             model.addAttribute("regErrorUserExists", true);
             return "registration";
         }
-        logger.info("New user was saved, user id = " + user.getId());
+        logger.info("New user was saved, user id = " + user.getId() + "  " + java.time.ZonedDateTime.now());
         return "redirect:login?error=false";
     }
 
     @GetMapping("/login")
-    public String loginForm(@RequestParam(name = "error") boolean error, Model model) {
+    public String loginForm(@RequestParam(name = "error") boolean error,
+                            @RequestParam(name = "ban", required = false) boolean banned,
+                            Model model) {
         model.addAttribute("userForm", new User());
         if (error) {
             model.addAttribute("logErrorNoSuchUserFound", true);
+        }
+
+        if(banned){
+            model.addAttribute("userIsBlocked", true);
         }
         return "login";
     }
 
     @GetMapping("/successfulLogin")
-    public String loginCheck(Model model, Authentication authResult) {
+    public String loginCheck( Authentication authResult) {
 
         String role = authResult.getAuthorities().toString();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (user.getStatus().equals("blocked")) {
-            model.addAttribute("userIsBlocked", true);
-            return "/login";
+            return "redirect:login?error=false&ban=true";
         }
 
         if (role.contains("user")) {
-            logger.info("User authenticated, id = " + user.getId() + ", name = " + user.getName());
+            logger.info("User authenticated, id = " + user.getId() + ", name = " + user.getName() + "  " + java.time.ZonedDateTime.now());
             return "redirect:user?userId=" + user.getId() + "&show=false";
 
         } else if (role.contains("admin")) {
-            logger.info("Admin authenticated, id = " + user.getId() + ", name = " + user.getName());
+            logger.info("Admin authenticated, id = " + user.getId() + ", name = " + user.getName() + "  " + java.time.ZonedDateTime.now());
             return "redirect:admin";
         }
 

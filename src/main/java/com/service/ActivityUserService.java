@@ -61,7 +61,7 @@ public class ActivityUserService {
         return dtos;
     }
 
-    // requestsAmount + 1; requstedTimes + 1;
+    // requestsAmount + 1; requstedTimes + 1; status = requested
     public void reqActivity(long activityId, long userId) {
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         ActivityUser activityUser = new ActivityUser();
@@ -72,11 +72,11 @@ public class ActivityUserService {
         userService.updateRequestsAmount(userId, true);
     }
 
-    // requestsAmount -1; taken_by amount + 1;
+    // requestsAmount -1; taken_by amount + 1; status = inProcess
     public void approveActivityForUser(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         ActivityUser au = activityUserRepository.findByActivityUserId(activityUserId);
-        au.setStatus("in process");
+        au.setStatus("inProcess");
         au.setTime_spent(String.valueOf(System.currentTimeMillis()));
         activityUserRepository.save(au);
 
@@ -84,7 +84,7 @@ public class ActivityUserService {
         userService.updateRequestsAmount(userId, false);
     }
 
-    // requestsAmount -1;
+    // requestsAmount -1; delete
     public void denyApproval(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         activityUserRepository.deleteById(activityUserId);
@@ -92,7 +92,7 @@ public class ActivityUserService {
         userService.updateRequestsAmount(activityId, false);
     }
 
-    // points + ; activitiesAmount + 1;
+    // points + ; activitiesAmount + 1; status = completed
     public void activityCompleted(long activityId, long userId){
         double reward = activityService.findById(activityId).getReward();
         userService.updateActivitiesAmount(userId);
@@ -102,12 +102,15 @@ public class ActivityUserService {
         activityUserRepository.deleteById(activityUserId);
     }
 
-    // points - /0.5;
+    // points - /0.5; delete
     public void activityGaveUp(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         activityUserRepository.deleteById(activityUserId);
         double points = activityService.findById(activityId).getReward();
         userService.updatePointsAmount(userId, points / 2);
+    }
+
+    public void activityDeleted(long activityId){
 
     }
 
