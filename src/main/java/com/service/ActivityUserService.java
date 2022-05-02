@@ -6,6 +6,7 @@ import com.entity.ActivityUser;
 import com.entity.embedded.ActivityUserId;
 import com.repository.ActivityRepository;
 import com.repository.ActivityUserRepository;
+import com.util.Util;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,14 +55,15 @@ public class ActivityUserService {
         for(ActivityUser a: usersActivities){
             Activity ac = parseActivityFromUserActivity(a);
             ActivityDTO dto = ActivityDTO.parseActivity(ac);
-            dto.setTimeSpent(a.getTimeSpent());
+            long timeSpent = System.currentTimeMillis() - a.getTimeSpent();
+            dto.setTimeSpent(Util.getFormattedTimeSpent(timeSpent));
             dto.setStatus(a.getStatus());
             dtos.add(dto);
         }
         return dtos;
     }
 
-    // requestsAmount + 1; requstedTimes + 1; status = requested
+    // requestsAmount + 1; requestedTimes + 1; status = requested // working
     public void reqActivity(long activityId, long userId) {
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         ActivityUser activityUser = new ActivityUser();
@@ -77,7 +79,7 @@ public class ActivityUserService {
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         ActivityUser au = activityUserRepository.findByActivityUserId(activityUserId);
         au.setStatus("inProcess");
-        au.setTime_spent(String.valueOf(System.currentTimeMillis()));
+        au.setTime_spent(System.currentTimeMillis());
         activityUserRepository.save(au);
 
         activityService.updateTakesAmount(activityId);
@@ -88,11 +90,10 @@ public class ActivityUserService {
     public void denyApproval(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         activityUserRepository.deleteById(activityUserId);
-
-        userService.updateRequestsAmount(activityId, false);
+        userService.updateRequestsAmount(userId, false);
     }
 
-    // points + ; activitiesAmount + 1; status = completed
+    // points + ; activitiesAmount + 1;
     public void activityCompleted(long activityId, long userId){
         double reward = activityService.findById(activityId).getReward();
         userService.updateActivitiesAmount(userId);
@@ -111,7 +112,8 @@ public class ActivityUserService {
     }
 
     public void activityDeleted(long activityId){
-
+        List<Long> userIds = activityUserRepository.getUsersWithRequestId(activityId);
+        userService.activityDeleted(userIds);
     }
 
     public List<Activity> parseActivitiesFromUserActivity(List<ActivityUser> list){
@@ -124,15 +126,5 @@ public class ActivityUserService {
 
     private Activity parseActivityFromUserActivity(ActivityUser activityUser) {
         return activityRepository.findActivityById(activityUser.getActivityUserId().getActivityId());
-    }
-
-    public List<ActivityDTO> getUsersRequests(long userId){
-        List<Long> list = activityUserRepository.getRequestedActivitiesIds(userId);
-        List<Activity> activities = new ArrayList<>();
-
-        for(long l: list) {
-            activities.add(activityService.findById(l));
-        }
-        return activityService.parseActivitiesList(activities);
     }
 }

@@ -5,30 +5,30 @@
     <title>Admin profile</title>
 </head>
 <body>
-<span th:text="'Welcome, dear administrator, it\'s your profile'" ></span><br>
-<hr>
 <form method="post" action="/logout">
     <input type="submit" value="Log Out">
 </form>
+<span th:text="'Welcome, dear administrator, it\'s your profile'" ></span><br>
+<hr>
 <form method="get" action="/admin">
     <input type="submit" value="back">
 </form>
 <hr>
 <p th:text="'You are admin'"></p>
-<form th:action="@{'/admin/changePassword'}" th:method="GET">
+<form th:action="@{'/admin/profile/changePassword'}" th:method="GET">
     <input type="submit" value="change password?"/>
 </form>
 <br>
 <div th:if="${shouldShowChangePassField}">
-    <form th:action="@{'/admin/changePassword'}" th:method="POST">
+    <form th:action="@{'/admin/profile/changePassword'}" th:method="POST">
         <label for="passField" th:text="'Enter new password'"></label>
-        <input type="text" id="passField" name="newPass"/>
+        <input type="password" id="passField" name="newPass"/>
         <input type="submit" value="confirm changes"/>
     </form>
 </div>
 
 <div th:if="${currentUserEmptyEmail}">
-    <form action="/admin/addEmail" method="post">
+    <form action="/admin/profile/addEmail" method="post">
         <label for="emailField" th:text="'Add email'">asd</label>
         <input type="text" id="emailField" name="email"/>
         <input type="submit" value="Add email"/>

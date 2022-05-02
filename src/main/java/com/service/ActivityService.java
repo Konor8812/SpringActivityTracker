@@ -18,12 +18,13 @@ public class ActivityService {
     @Autowired
     ActivityRepository activityRepository;
 
+
     public boolean addActivity(Activity activity){
         try {
             activityRepository.save(activity);
             return true;
         }catch(Exception e){
-            logger.info("activity " + activity.getName() + " wasn't saved");
+            logger.info("activity " + activity.getName() + " wasn't saved, reason: " + e.getMessage());
             return false;
         }
     }
@@ -46,7 +47,11 @@ public class ActivityService {
 
 
     public void deleteActivity(long activityId){
+        activityRepository.DISABLE_FOREIGN_KEY_CHECKS();
+        Activity ac = activityRepository.findActivityById(activityId);
+        activityRepository.deleteDescription(ac.getId());
         activityRepository.deleteById(activityId);
+        activityRepository.ENABLE_FOREIGN_KEY_CHECKS();
     }
 
     public Activity findById(long activityId){

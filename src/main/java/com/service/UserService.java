@@ -108,4 +108,11 @@ public class UserService implements UserDetailsService {
     public void deleteUser(long userId) {
         userRepository.deleteById(userId);
     }
+
+
+    public void activityDeleted(List<Long> activityId){
+        for(long l: activityId){
+            userRepository.updateRequestsAmount(l);
+        }
+    }
 }

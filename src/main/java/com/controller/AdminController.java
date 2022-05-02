@@ -3,10 +3,12 @@ package com.controller;
 import com.dto.ActivityDTO;
 import com.dto.UserDTO;
 import com.entity.Activity;
+import com.entity.Description;
 import com.entity.User;
 import com.service.ActivityService;
 import com.service.ActivityUserService;
 import com.service.UserService;
+import com.validator.InputDataValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,12 +43,12 @@ public class AdminController {
 
     @GetMapping("/banUser")
     public String banUser(@RequestParam(name = "shouldBan") boolean ban,
-                          @RequestParam(name ="userId") long userId,
+                          @RequestParam(name = "userId") long userId,
                           Model model) {
         String status;
-        if(ban){
+        if (ban) {
             status = "blocked";
-        }else{
+        } else {
             status = "available";
         }
         userService.updateStatus(userId, status);
@@ -64,7 +66,7 @@ public class AdminController {
         return "admin/adminProfile";
     }
 
-    @GetMapping("/changePassword")
+    @GetMapping("/profile/changePassword")
     public String showUpdatePassField(Model model) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -75,15 +77,15 @@ public class AdminController {
         return "admin/adminProfile";
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping("/profile/changePassword")
     public String changePass(@RequestParam(name = "newPass") String newPassword, Model model) {
-        User user =(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.updateUserPass(user.getId(), newPassword);
 
         return getProfile(model);
     }
 
-    @PostMapping("/addEmail")
+    @PostMapping("profile/addEmail")
     public String addEmail(@RequestParam(name = "email") String email, Model model) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         userService.updateUserEmail(user.getId(), email);
@@ -93,47 +95,71 @@ public class AdminController {
 
     @GetMapping("/activities")
     public String getActivities(Model model,
-                                @RequestParam(name="show", required=false) boolean shouldShowTags){
-    List<Activity> activities = activityService.getAllActivities();
-    model.addAttribute("activities", activities);
-    model.addAttribute("shouldShowTags", shouldShowTags);
-    return "admin/adminActivity";
+                                @RequestParam(name = "show", required = false) boolean shouldShowTags,
+                                @RequestParam(name = "errorInvalidData", required = false) boolean invalidData) {
+        List<Activity> activities = activityService.getAllActivities();
+        model.addAttribute("activities", activities);
+        model.addAttribute("shouldShowTags", shouldShowTags);
+        model.addAttribute("invalidData", invalidData);
+        return "admin/adminActivity";
     }
 
     @GetMapping("/activities/deleteActivity")
-    public String deleteActivity(@RequestParam(name="activityId") long activityId, Model model){
+    public String deleteActivity(@RequestParam(name = "activityId") long activityId, Model model) {
         activityService.deleteActivity(activityId);
-        return getActivities(model, false);
+        activityUserService.activityDeleted(activityId);
+        return getActivities(model, false, false);
+    }
+
+    @PostMapping("/activities/addActivity")
+    public String addActivity(@RequestParam(name = "name") String name,
+                              @RequestParam(name = "duration") String duration,
+                              @RequestParam(name = "reward") double reward,
+                              @RequestParam(name = "description") String description,
+                              Model model) {
+
+        if (InputDataValidator.validateActivity(name, duration, reward, description)) {
+            Activity activity = new Activity();
+            activity.setName(name);
+            activity.setDuration(duration);
+            activity.setReward(reward);
+            activity.setDescription(new Description(description));
+
+            if (activityService.addActivity(activity)) {
+                return getActivities(model, false, false);
+            }
+        }
+        return getActivities(model, false, true);
+
     }
 
     @GetMapping("/usersStats")
-    public String getUsersRequests(@RequestParam(name="userId") long userId,
-                                   Model model)
-    {
-        List<ActivityDTO> usersActivities = activityUserService.getUsersRequests(userId);
-        model.addAttribute("usersActivities", usersActivities);
+    public String getUsersRequests(@RequestParam(name = "userId") long userId,
+                                   Model model) {
         User user = userService.findUserById(userId);
         model.addAttribute("user", user);
+
+        List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(userId);
+        model.addAttribute("usersActivities", usersActivities);
+        if(usersActivities.isEmpty()) {
+            model.addAttribute("hasActivities", false);
+        }else{
+            model.addAttribute("hasActivities", true);
+        }
+
         return "admin/userStatistics";
     }
 
     @GetMapping("/usersStats/denyOrApproveActivity")
-    public String approveActivity(@RequestParam(name="userId") long userId,
-                                  @RequestParam(name="activityId") long activityId,
-                                  @RequestParam(name="approve") boolean approve){
-        if(approve){
+    public String approveActivity(@RequestParam(name = "userId") long userId,
+                                  @RequestParam(name = "activityId") long activityId,
+                                  @RequestParam(name = "approve") boolean approve, Model model) {
+        if (approve) {
             activityUserService.approveActivityForUser(activityId, userId);
-        }else {
+        } else {
             activityUserService.denyApproval(activityId, userId);
         }
-        return "redirect:admin/userRequests?userId=" + userId;
+        return getUsersRequests(userId, model);
     }
-
-    @GetMapping("/usersStats/deleteUser")
-    public String deleteUser(@RequestParam(name = "userId") long userId){
-        userService.deleteUser(userId);
-        return "redirect:admin";
-    }
-
 
 }

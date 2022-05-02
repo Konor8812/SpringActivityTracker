@@ -6,16 +6,18 @@
     <link rel="stylesheet" th:href="@{'/style.css'}"/>
 </head>
 <body>
-<span style="color:darkgreen"  th:text="'Welcome, ' + ${user.name} + ', it\'s your profile'" ></span><br>
-<span style="color: darkviolet" th:text="'Currently you have ' + ${user.activitiesAmount} + ' activities and ' + ${user.requestsAmount} + ' requests'"></span><br>
-<span style="color: darkmagenta" th:text="'You have earned ' + ${user.totalPoints} + ' points'"></span><br>
-<hr>
 <form method="post" action="/logout">
     <input type="submit" value="Log Out">
-</form><br>
+</form><hr>
+<span style="color:darkgreen"  th:text="'Welcome, ' + ${user.name} + ', it\'s your profile'" ></span><br>
+<span style="color: darkviolet" th:text="'Currently you have ' + ${user.activitiesAmount} + ' activities done and ' + ${user.requestsAmount} + ' requests'"></span><br>
+<span style="color: darkmagenta" th:text="'You have earned ' + ${user.totalPoints} + ' points'"></span><br>
+<hr>
+
 <form th:method="GET" th:action="@{'/user'}">
     <input type="submit" value="back">
 </form>
+<div th:if="${hasActivities}">
 <hr>
 <table>
     <tr>
@@ -41,24 +43,33 @@
         </td>
         <td>
             <div th:if="${activity.status == 'inProcess'}">
-            <a th:href="@{'/user/userProfile/completedActivity?activityId=' + ${activity.id}}" th:text="'submit'"></a>
+            <a th:href="@{'/user/profile/completedActivity?activityId=' + ${activity.id}}" th:text="'submit'"></a>
             </div>
         </td>
         <td>
             <div th:if="${activity.status == 'inProcess'}">
-                <a th:href="@{'/user/userProfile/gaveUpActivity?activityId=' + ${activity.id}}" th:text="'give up'"></a>
+                <a th:href="@{'/user/profile/gaveUpActivity?activityId=' + ${activity.id}}" th:text="'give up'"></a>
             </div>
         </td>
     </tr>
 </table>
+</div>
+<div th:if="${!hasActivities}">
+    <span style="color: chocolate" th:text="'You have no activities!'"/> <br>
+</div>
+
 <hr>
+
 <div th:if="${user.emailEmpty}">
-    <form action="/user/addEmail" method = "post">
+    <form action="/user/profile/addEmail" method = "post">
         <label for="emailField" th:text="'Add your email'"></label>
-        <input type="text" name="newEmail" id="emailField"/>
+        <input type="text" name="value" id="emailField"/>
         <input type="hidden" name="userId" th:value="${user.id}">
         <input type="submit" value="Add email"/>
     </form>
+    <div th:if="${!emailValid}">
+        <span th:text="'Invalid email format!'"/>
+    </div>
 </div>
 </body>
 </html>

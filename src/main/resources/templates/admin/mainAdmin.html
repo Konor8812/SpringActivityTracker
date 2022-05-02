@@ -33,7 +33,7 @@ Logged in as admin
         <td> /*\ </td>
         <td>
             <div th:if="${user.role != 'admin'}">
-                <a th:href="@{'/admin/usersStats?usersId=' + ${user.id}}" th:text="${user.name}"></a>
+                <a th:href="@{'/admin/usersStats?userId=' + ${user.id}}" th:text="${user.name}"></a>
             </div>
         </td>
         <td th:text="${user.email}"></td>

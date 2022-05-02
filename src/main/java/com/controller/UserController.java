@@ -51,41 +51,47 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public String getProfile(Model model){
-        User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(currentUser.getId());
+    public String getProfile(Model model,
+                             @RequestParam(name = "emailInvalid", required = false) boolean emailValid){
+        long currentUserId = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+        User currentUser = userService.findUserById(currentUserId);
+        List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(currentUserId);
+        if (!usersActivities.isEmpty()){
+            model.addAttribute("hasActivities", true);
+        }else{
+            model.addAttribute("hasActivities", false);
+        }
+
         model.addAttribute("usersActivities", usersActivities);
         model.addAttribute("user", currentUser);
-
+        model.addAttribute("emailValid", emailValid);
         return "user/userProfile";
 
     }
 
     @GetMapping("/profile/completedActivity")
-    public String completedActivity(@RequestParam(name="activityId") long activityId){
+    public String completedActivity(@RequestParam(name="activityId") long activityId, Model model){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityCompleted(activityId, user.getId());
-
-        return "redirect:user/profile";
+        return getProfile(model, true);
     }
 
     @GetMapping("/profile/gaveUpActivity")
-    public String activityGaveUp(@RequestParam(name = "activityId") long activityId){
+    public String activityGaveUp(@RequestParam(name = "activityId") long activityId, Model model){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityGaveUp(activityId, user.getId());
-        return "redirect:user/profile";
+        return getProfile(model, true);
     }
 
     @PostMapping("profile/addEmail")
     public String addUsersEmail(@RequestParam(name="userId") long userId,
             @RequestParam(name = "value") String str,
                                 Model model) {
-        if (InputDataValidator.validateEmail(str)) {
+        boolean emailValid = InputDataValidator.validateEmail(str);
+        if (emailValid) {
             userService.updateUserEmail(userId, str);
-        } else {
-            model.addAttribute("wrongEmailFormat", true);
         }
-        return getProfile(model);
+        return getProfile(model, emailValid);
     }
 
 }

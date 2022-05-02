@@ -30,4 +30,19 @@ public class InputDataValidator {
         Matcher emailMatcher = Pattern.compile("([a-zA-Z_0-9]+)@([a-zA-Z]+)\\.([a-z]+)").matcher(email);
         return emailMatcher.matches();
     }
+
+
+    public static boolean validateActivity(String name, String duration, double reward, String description){
+
+        Matcher nameMatcher = Pattern.compile("[A-Za-z ]{2,}").matcher(name);
+        Matcher durationMatcher = Pattern.compile("(\\d)+((\\.\\d)?) (hours|days)").matcher(duration);
+        Matcher descriptionMatcher = Pattern.compile("([a-zA-Z]+)((, [a-zA-Z]+)*)").matcher(description);
+
+//        System.out.println("name " + nameMatcher.matches());
+//        System.out.println("duration " + durationMatcher.matches());
+//        System.out.println("reward " + reward + "  " + (reward > 0));
+//        System.out.println("description " + descriptionMatcher.matches());
+        return nameMatcher.matches() && durationMatcher.matches() && descriptionMatcher.matches() && reward > 0;
+
+    }
 }

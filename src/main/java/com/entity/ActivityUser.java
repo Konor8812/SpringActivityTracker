@@ -20,7 +20,7 @@ public class ActivityUser {
     private String status = "requested";
 
     @Column(name="time_spent")
-    private String timeSpent = Util.getFormattedTimeSpent(System.currentTimeMillis());
+    private long timeSpent = System.currentTimeMillis();
 
     public ActivityUserId getActivityUserId() {
         return activityUserId;
@@ -38,11 +38,11 @@ public class ActivityUser {
         this.status = status;
     }
 
-    public String getTimeSpent() {
+    public long getTimeSpent() {
         return timeSpent;
     }
 
-    public void setTime_spent(String timeSpent) {
+    public void setTime_spent(long timeSpent) {
         this.timeSpent = timeSpent;
     }
 }

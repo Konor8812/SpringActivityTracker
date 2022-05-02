@@ -6,7 +6,7 @@
 </head>
 <body>
 You are admin
-<form method="get" action="/admin/mainAdmin">
+<form method="get" action="/admin">
     <input type="submit" value="back">
 </form>
 <table>
@@ -42,12 +42,24 @@ You are admin
     </tr>
 </table>
 
-<form action="admin/activities/addNewActivity" method="post">
-    <label for="name" th:text="'Enter activityName'"
+<form action="activities/addActivity" method="post">
+    <label for="name" th:text="'Enter name for activity || cyricls only'"/>
+    <input id="name" type="text" name="name"><br>
 
+    <label for="duration" th:text="'Enter duration || decimal [hours-days]'"/>
+    <input id="duration" type="text" name="duration"><br>
 
+    <label for="reward" th:text="'Enter reward || decimal'"/>
+    <input id="reward" type="text" name="reward"><br>
+
+    <label for="description" th:text="'Ented description || cyrilics, tags should be separated with |,|'"/>
+    <input id="description" type="text" name="description"><br>
+    <input type="submit" value="submit"/>
 </form>
-
+<br>
+<div th:if="${invalidData}"><hr>
+    <span th:text="'Invalid value(s), please read carefully!'"></span>
+</div>
 
 </body>
 </html>

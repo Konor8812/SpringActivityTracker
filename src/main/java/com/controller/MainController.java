@@ -102,7 +102,7 @@ public class MainController {
             return "redirect:admin";
         }
 
-        logger.error("Can not identify role, redirect /logout");
+        logger.error("Can not identify role | " + role + " |, redirect /logout");
         return "redirect:logout";
     }
 

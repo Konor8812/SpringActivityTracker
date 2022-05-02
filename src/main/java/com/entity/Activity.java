@@ -1,6 +1,7 @@
 package com.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -8,6 +9,7 @@ import java.util.Objects;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Entity
 @Table(name = "activity")
 public class Activity {
@@ -30,7 +32,7 @@ public class Activity {
     private int requestedTimes = 0;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="activity_description_id")
+    @JoinColumn(name="description_id")
     private Description description;
 
     public long getId() {
@@ -59,10 +61,6 @@ public class Activity {
 
     public double getReward() {
         return reward;
-    }
-
-    public void setReward(int reward) {
-        this.reward = reward;
     }
 
     public int getTakenBy() {
@@ -106,4 +104,5 @@ public class Activity {
     public void setDescription(Description description) {
         this.description = description;
     }
+
 }
