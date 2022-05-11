@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,6 +16,31 @@ import java.util.List;
 public interface ActivityRepository extends JpaRepository<Activity, Long>{
 
      Activity findActivityById(long activityId);
+
+    @Query(value = "select * from activity order by name ASC ", nativeQuery = true)
+     ArrayList<Activity> findAllByNameASC();
+
+    @Query(value = "select * from activity order by name DESC ", nativeQuery = true)
+    ArrayList<Activity> findAllByNameDESC();
+
+    @Query(value = "select * from activity order by taken_by ASC", nativeQuery = true)
+    ArrayList<Activity> findAllByTakesASC();
+
+    @Query(value = "select * from activity order by taken_by DESC ", nativeQuery = true)
+    ArrayList<Activity> findAllByTakesDESC();
+
+    @Query(value = "select * from activity order by reward ASC", nativeQuery = true)
+    ArrayList<Activity> findAllByRewardASC();
+
+    @Query(value = "select * from activity order by reward DESC ", nativeQuery = true)
+    ArrayList<Activity> findAllByRewardDESC();
+
+    @Query(value = "select * from activity order by requested_times ASC", nativeQuery = true)
+    ArrayList<Activity> findAllByRequestsASC();
+
+    @Query(value = "select * from activity order by requested_times DESC ", nativeQuery = true)
+    ArrayList<Activity> findAllByRequestsDESC();
+
 
      @Transactional
      @Modifying

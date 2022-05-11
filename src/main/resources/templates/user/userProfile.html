@@ -67,7 +67,7 @@
         <input type="hidden" name="userId" th:value="${user.id}">
         <input type="submit" value="Add email"/>
     </form>
-    <div th:if="${!emailValid}">
+    <div th:if="${showEmailInvalidField}">
         <span th:text="'Invalid email format!'"/>
     </div>
 </div>

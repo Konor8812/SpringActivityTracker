@@ -18,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
         @Transactional
         @Modifying
-        @Query(value = "update user t set t.requests_amount = (t.requests_amount - 1) where t.id = (?) ", nativeQuery = true)
+        @Query(value = "update user t set t.requests_amount = (t.requests_amount - 1) where t.id = (?) ",
+                nativeQuery = true)
         void updateRequestsAmount(long userId);
 }

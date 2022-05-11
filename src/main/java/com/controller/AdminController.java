@@ -67,11 +67,14 @@ public class AdminController {
     }
 
     @GetMapping("/profile/changePassword")
-    public String showUpdatePassField(Model model) {
+    public String showUpdatePassField(Model model, boolean isNewPassValid) {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             model.addAttribute("currentUserEmptyEmail", true);
+        }
+        if(!isNewPassValid){
+            model.addAttribute("newValueInvalid", true);
         }
         model.addAttribute("shouldShowChangePassField", true);
         return "admin/adminProfile";
@@ -79,10 +82,13 @@ public class AdminController {
 
     @PostMapping("/profile/changePassword")
     public String changePass(@RequestParam(name = "newPass") String newPassword, Model model) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        userService.updateUserPass(user.getId(), newPassword);
-
-        return getProfile(model);
+        if(InputDataValidator.validatePassword(newPassword)) {
+            User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            userService.updateUserPass(user.getId(), newPassword);
+            return getProfile(model);
+        }else{
+            return showUpdatePassField(model, false);
+        }
     }
 
     @PostMapping("profile/addEmail")
@@ -96,8 +102,10 @@ public class AdminController {
     @GetMapping("/activities")
     public String getActivities(Model model,
                                 @RequestParam(name = "show", required = false) boolean shouldShowTags,
-                                @RequestParam(name = "errorInvalidData", required = false) boolean invalidData) {
-        List<Activity> activities = activityService.getAllActivities();
+                                @RequestParam(name = "errorInvalidData", required = false) boolean invalidData,
+                                @RequestParam(name= "sortBy", required = false, defaultValue = "name") String sortBy,
+                                @RequestParam(name= "orderBy", required = false, defaultValue = "asc") String orderBy) {
+        List<Activity> activities = activityService.getAllActivities(sortBy, orderBy);
         model.addAttribute("activities", activities);
         model.addAttribute("shouldShowTags", shouldShowTags);
         model.addAttribute("invalidData", invalidData);
@@ -108,7 +116,7 @@ public class AdminController {
     public String deleteActivity(@RequestParam(name = "activityId") long activityId, Model model) {
         activityService.deleteActivity(activityId);
         activityUserService.activityDeleted(activityId);
-        return getActivities(model, false, false);
+        return getActivities(model, false, false, "name", "asc");
     }
 
     @PostMapping("/activities/addActivity")
@@ -126,10 +134,10 @@ public class AdminController {
             activity.setDescription(new Description(description));
 
             if (activityService.addActivity(activity)) {
-                return getActivities(model, false, false);
+                return getActivities(model, false, false, "name", "asc");
             }
         }
-        return getActivities(model, false, true);
+        return getActivities(model, false, true, "name", "asc");
 
     }
 

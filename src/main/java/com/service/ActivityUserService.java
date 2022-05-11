@@ -34,7 +34,7 @@ public class ActivityUserService {
         List<Activity> alreadyTakenActivities = parseActivitiesFromUserActivity(
                 activityUserRepository.findAllUsersActivities(userId));
 
-        List<Activity> allActivities = activityService.getAllActivities();
+        List<Activity> allActivities = activityService.getAllActivities("name", "asc");
         List<Activity> availableActivities = new ArrayList<>();
         L: for(Activity a: allActivities) {
             for (Activity ac : alreadyTakenActivities) {

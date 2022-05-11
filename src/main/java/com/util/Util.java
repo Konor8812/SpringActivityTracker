@@ -1,6 +1,12 @@
 package com.util;
 
+import com.entity.Activity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class Util {
 
@@ -37,7 +43,44 @@ public abstract class Util {
         return sb.toString();
     }
 
-    public static String formatDescription(String s){
-        return "";
+
+    public static List<Activity> sortActivitiesByDuration(List<Activity> activities, String order) {
+        List<Activity> hoursDuration = new ArrayList<>();
+        List<Activity> daysDuration = new ArrayList<>();
+
+        List<Activity> sorted = new ArrayList<>();
+
+        for (Activity activity : activities) {
+
+            if (activity.getDuration().contains("days")) {
+                daysDuration.add(activity);
+            } else {
+                hoursDuration.add(activity);
+            }
+        }
+
+        if(order.equals("asc")) {
+            hoursDuration = hoursDuration.stream().sorted(Comparator.comparing(Activity::getDuration)).collect(Collectors.toList());
+            daysDuration = daysDuration.stream().sorted(Comparator.comparing(Activity::getDuration)).collect(Collectors.toList());
+
+            for (Activity activity : hoursDuration) {
+                sorted.add(activity);
+            }
+            for (Activity activity : daysDuration) {
+                sorted.add(activity);
+            }
+        }else{
+            hoursDuration = hoursDuration.stream().sorted(Comparator.comparing(Activity::getDuration).reversed()).collect(Collectors.toList());
+            daysDuration = daysDuration.stream().sorted(Comparator.comparing(Activity::getDuration).reversed()).collect(Collectors.toList());
+
+            for (Activity activity : daysDuration) {
+                sorted.add(activity);
+            }
+            for (Activity activity : hoursDuration) {
+                sorted.add(activity);
+            }
+        }
+        return sorted;
+
     }
 }

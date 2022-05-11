@@ -52,7 +52,7 @@ public class UserController {
 
     @GetMapping("/profile")
     public String getProfile(Model model,
-                             @RequestParam(name = "emailInvalid", required = false) boolean emailValid){
+                             @RequestParam(name = "emailInvalid", required = false) boolean emailInvalid){
         long currentUserId = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         User currentUser = userService.findUserById(currentUserId);
         List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(currentUserId);
@@ -64,7 +64,7 @@ public class UserController {
 
         model.addAttribute("usersActivities", usersActivities);
         model.addAttribute("user", currentUser);
-        model.addAttribute("emailValid", emailValid);
+        model.addAttribute("showEmailInvalidField", emailInvalid);
         return "user/userProfile";
 
     }
@@ -73,14 +73,14 @@ public class UserController {
     public String completedActivity(@RequestParam(name="activityId") long activityId, Model model){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityCompleted(activityId, user.getId());
-        return getProfile(model, true);
+        return getProfile(model, false);
     }
 
     @GetMapping("/profile/gaveUpActivity")
     public String activityGaveUp(@RequestParam(name = "activityId") long activityId, Model model){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityGaveUp(activityId, user.getId());
-        return getProfile(model, true);
+        return getProfile(model, false);
     }
 
     @PostMapping("profile/addEmail")
@@ -90,8 +90,10 @@ public class UserController {
         boolean emailValid = InputDataValidator.validateEmail(str);
         if (emailValid) {
             userService.updateUserEmail(userId, str);
+            return getProfile(model, false);
+        } else {
+            return getProfile(model, true);
         }
-        return getProfile(model, emailValid);
     }
 
 }

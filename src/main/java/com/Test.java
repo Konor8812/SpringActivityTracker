@@ -8,7 +8,7 @@ public class Test {
 
         System.out.println(350 * 7 / 36 / 45);
 
-       // System.out.println(new BCryptPasswordEncoder().encode("admin"));
+        System.out.println(new BCryptPasswordEncoder().encode("admin"));
     }
 
 }

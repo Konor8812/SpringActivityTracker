@@ -8,14 +8,36 @@
 You are admin
 <form method="get" action="/admin">
     <input type="submit" value="back">
-</form>
+</form><br>
+
+<br>
 <table>
     <tr>
-        <th>name</th>
-        <th>duration</th>
-        <th>reward</th>
-        <th>taken by amount</th>
-        <th>requested times</th>
+        <th>
+            <span th:text="'name '"></span>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=name&orderBy=asc'}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=name&orderBy=desc'}" th:text="'↓'"/>
+        </th>
+        <th>
+            <span th:text="'duration '"></span>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=duration&orderBy=asc'}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=duration&orderBy=desc'}" th:text="'↓'"/>
+        </th>
+        <th>
+            <span th:text="'reward '"></span>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=reward&orderBy=asc'}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=reward&orderBy=desc'}" th:text="'↓'"/>
+        </th>
+        <th>
+            <span th:text="'taken by amount '"></span>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=takes&orderBy=asc'}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=takes&orderBy=desc'}" th:text="'↓'"/>
+        </th>
+        <th>
+            <span th:text="'requested times '"></span>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=requests&orderBy=asc'}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=requests&orderBy=desc'}" th:text="'↓'"/>
+        </th>
         <th>
             <div th:if="${shouldShowTags}">
             <a href="/admin/activities?show=false" th:text="'hide tags'"></a>
@@ -40,9 +62,12 @@ You are admin
             <a th:href="@{'/admin/activities/deleteActivity?activityId=' + ${activity.id}}" th:text="delete" ></a>
         </td>
     </tr>
-</table>
+</table><br>
 
-<form action="activities/addActivity" method="post">
+
+<br>
+<hr>
+<form th:action="@{'admin/activities/addActivity'}" method="post">
     <label for="name" th:text="'Enter name for activity || cyricls only'"/>
     <input id="name" type="text" name="name"><br>
 
