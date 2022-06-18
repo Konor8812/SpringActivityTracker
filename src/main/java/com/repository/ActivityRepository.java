@@ -42,6 +42,9 @@ public interface ActivityRepository extends JpaRepository<Activity, Long>{
     ArrayList<Activity> findAllByRequestsDESC();
 
 
+    @Query(value="select * from activity join activity_description on description_id=activity_description.id where activity_description.description like concat('%', ?, '%')", nativeQuery = true)
+    ArrayList<Activity> getAllActivitiesWithTag(String tag);
+
      @Transactional
      @Modifying
      @Query(value = "delete from activity_description where id=(?)", nativeQuery = true)

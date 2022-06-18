@@ -10,7 +10,7 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 
 @Configuration
 @ComponentScan("com.controller")
-@EnableWebMvc
+
 public class SpringConfig implements WebMvcConfigurer {
 
     @Bean

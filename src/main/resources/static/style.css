@@ -1,12 +1,26 @@
 body{
-    font-size: 16px;
+    font-size: 16pt;
     font-family: 'Montserrat', sans-serif;
     background: #faeaea;
 }
 tr:nth-child(odd) {
-    background-color: #005454;
+    background-color: #00adad;
+}
+
+tr:nth-child(even){
+    background-color: bisque;
 }
 
 td:first-child{
     color:red;
 }
+title{
+    color: red;
+}
+
+a { text-decoration: none; }
+
+a:link { color: gray; }
+a:visited { color: #2533e8; }
+a:hover { color: purple; }
+a:active { color: teal; }

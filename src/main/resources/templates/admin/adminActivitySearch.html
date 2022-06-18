@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head xmlns:th="http://www.thymeleaf.org">
+    <link rel="stylesheet" th:href="@{/style.css}"/>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<body>
+<form method="get" action="/admin/activities">
+    <input type="submit" value="back">
+</form><br>
+<br>
+<span th:text="'Enter tag to get all such activities'"/>
+<form method="get" action="/admin/activities/search">
+    <input type="text" name="tagName">
+    <input type="submit" value="search">
+</form>
+
+<div th:if="${shouldShowSearchResult}">
+<table>
+    <tr>
+        <th>
+            <span th:text="'name '"></span>
+        </th>
+        <th>
+            <span th:text="'duration '"></span>
+            </th>
+        <th>
+            <span th:text="'reward '"></span>
+           </th>
+        <th>
+            <span th:text="'taken by amount '"></span>
+            </th>
+        <th>
+            <span th:text="'requested times '"></span>
+            </th>
+        <th>
+            <span th:text="'tags '"></span>
+        </th>
+    </tr>
+    <tr th:each="activity: ${activitiesWithSuchTag}">
+        <td th:text="${activity.name}"></td>
+        <td th:text="${activity.duration}"></td>
+        <td th:text="${activity.reward}"></td>
+        <td th:text="${activity.takenBy}"></td>
+        <td th:text="${activity.requestedTimes}"></td>
+        <td>
+            <span th:text="${activity.description.description}"></span>
+        </td>
+        <td>
+            <a th:href="@{'/admin/activities/search?activityId=' + ${activity.id} + '&tagName=' + ${tagName}}" th:text="delete" ></a>
+        </td>
+    </tr>
+</table>
+</div>
+
+<br>
+</body>
+</html>

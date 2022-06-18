@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head xmlns:th="http://www.thymeleaf.org">
+    <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
@@ -11,6 +12,9 @@ You are admin
 </form><br>
 
 <br>
+<form method="get" action="/admin/activities/search">
+    <input type="submit" value="Go to search page">
+</form>
 <table>
     <tr>
         <th>

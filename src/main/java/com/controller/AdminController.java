@@ -170,4 +170,22 @@ public class AdminController {
         return getUsersRequests(userId, model);
     }
 
+    @GetMapping("/activities/search")
+    public String getSearchPage(@RequestParam(name="tagName", required = false) String tagName,
+                                @RequestParam(name="activityId", required = false) Long activityId,
+                                Model model){
+        if(tagName == null || tagName.isEmpty()){
+            return "admin/adminActivitySearch";
+        }
+        if(activityId != null){
+            activityService.deleteActivity(activityId);
+        }
+        List<Activity> activities = activityService.getAllActivitiesWithTag(tagName);
+        model.addAttribute("shouldShowSearchResult", true);
+        model.addAttribute("activitiesWithSuchTag", activities);
+        return "admin/adminActivitySearch";
+    }
+
+
+
 }

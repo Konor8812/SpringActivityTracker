@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head xmlns:th="http://www.thymeleaf.org">
+    <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
     <title>Admin main page</title>
-    <link rel="stylesheet" href="/style.css"/>
+
 </head>
 <body>
 <hr>
@@ -30,7 +31,7 @@ Logged in as admin
         <th>total points</th>
     </tr>
     <tr th:each="user: ${users}">
-        <td> /*\ </td>
+        <td> /*\</td>
         <td>
             <div th:if="${user.role != 'admin'}">
                 <a th:href="@{'/admin/usersStats?userId=' + ${user.id}}" th:text="${user.name}"></a>
@@ -39,7 +40,7 @@ Logged in as admin
         <td th:text="${user.email}"></td>
         <td th:text="${user.status}"></td>
         <td th:text="${user.activitiesAmount}"></td>
-        <td th:text="${user.requestsAmount}"> </td>
+        <td th:text="${user.requestsAmount}"></td>
 
         <td th:text="${user.totalPoints}"></td>
         <div th:if="${user.role != 'admin'}">

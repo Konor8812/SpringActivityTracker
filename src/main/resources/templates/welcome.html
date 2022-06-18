@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
 <head >
-    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/style.css}"/>
     <title>Activity Tracker</title>
 </head>
 <body>
 <hr>
 Welcome! <br>
-GO to registration <a href="/registration" th:text="registrate"></a>   <br><br>
-GO to login <a href="/login?error=false" th:text="login"></a>
-
+GO to  <a href="/registration" th:text="registration"></a>   <br><br>
+GO to  <a href="/login?error=false" th:text="login"></a>
 
 </body>
 </html>

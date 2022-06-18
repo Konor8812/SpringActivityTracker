@@ -95,14 +95,10 @@ public class ActivityService {
         return activityRepository.findActivityById(activityId);
     }
 
-    // is this method needed ?
-    public List<ActivityDTO> parseActivitiesList(List<Activity> activities) {
-        List<ActivityDTO> dtos = new ArrayList<>();
+    public List<Activity> getAllActivitiesWithTag(String tagName){
 
-        for (Activity a : activities) {
-            dtos.add(ActivityDTO.parseActivity(a));
-        }
-        return dtos;
+        List<Activity> activities = activityRepository.getAllActivitiesWithTag(tagName);
+        return activities;
     }
 
 }
