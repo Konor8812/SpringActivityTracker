@@ -3,32 +3,32 @@
 <head xmlns:th="http://www.thymeleaf.org">
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Admin main page</title>
+    <title th:text="#{lang.admin.main.page}"></title>
 
 </head>
 <body>
 <hr>
 <form method="post" action="/logout">
-    <input type="submit" value="Log Out">
+    <input type="submit" th:value="#{lang.logOut}">
 </form>
 <hr>
-Logged in as admin
+<p th:text="#{lang.loggedAsAdmin}"></p>
 <form method="get" action="/admin/profile">
-    <input type="submit" value="profile">
+    <input type="submit" th:value="#{lang.profile}">
 </form>
 <hr>
-<form method="get" action="/admin/activities">
-    <input type="submit" value="activities">
+<form method="get" th:action="@{'/admin/activities'}">
+    <input type="submit" th:value="#{lang.activities}">
 </form>
 <table>
     <tr>
         <th>***</th>
-        <th>name</th>
-        <th>email</th>
-        <th>status</th>
-        <th>activities amount</th>
-        <th>requests amount</th>
-        <th>total points</th>
+        <th th:text="#{lang.username}"> </th>
+        <th th:text="#{lang.email}"></th>
+        <th th:text="#{lang.status}"></th>
+        <th th:text="#{lang.activities.amount}"></th>
+        <th th:text="#{lang.requests.amount}"></th>
+        <th th:text="#{lang.total.points}"></th>
     </tr>
     <tr th:each="user: ${users}">
         <td> /*\</td>
@@ -38,7 +38,7 @@ Logged in as admin
             </div>
         </td>
         <td th:text="${user.email}"></td>
-        <td th:text="${user.status}"></td>
+        <td th:text="#{${user.status}}"></td>
         <td th:text="${user.activitiesAmount}"></td>
         <td th:text="${user.requestsAmount}"></td>
 
@@ -46,12 +46,12 @@ Logged in as admin
         <div th:if="${user.role != 'admin'}">
             <div th:if="${user.status == 'blocked'}">
                 <td>
-                    <a th:href="@{'/admin/banUser?shouldBan=false&userId=' + ${user.id}}" th:text="'unblock?'"></a>
+                    <a th:href="@{'/admin/banUser?shouldBan=false&userId=' + ${user.id}}" th:text="#{lang.unblock}"></a>
                 </td>
             </div>
             <div th:if="${user.status != 'blocked'}">
                 <td>
-                    <a th:href="@{'/admin/banUser?shouldBan=true&userId=' + ${user.id}}" th:text="'block?'"></a>
+                    <a th:href="@{'/admin/banUser?shouldBan=true&userId=' + ${user.id}}" th:text="#{lang.block}"></a>
                 </td>
             </div>
 

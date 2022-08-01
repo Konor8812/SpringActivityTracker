@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 
 @Controller
@@ -32,7 +33,8 @@ public class MainController {
     ActivityUserService activityUserService;
 
     @GetMapping("")
-    public String welcomeMethod() {
+    public String welcomeMethod(HttpSession session, @ModelAttribute(name="lang") String lang) {
+        session.setAttribute("lang", lang);
         return "welcome";
     }
 
@@ -69,28 +71,28 @@ public class MainController {
     }
 
     @GetMapping("/login")
-    public String loginForm(@RequestParam(name = "error") boolean error,
-                            @RequestParam(name = "ban", required = false) boolean banned,
+    public String loginForm(@RequestParam(name = "error", required = false) boolean error,
+                            @RequestParam(name = "banned", required = false) boolean banned,
                             Model model) {
+        System.out.println(banned);
         model.addAttribute("userForm", new User());
         if (error) {
             model.addAttribute("logErrorNoSuchUserFound", true);
         }
-
-        if(banned){
-            model.addAttribute("userIsBlocked", true);
-        }
+        model.addAttribute("userIsBlocked", banned);
         return "login";
     }
 
     @GetMapping("/successfulLogin")
-    public String loginCheck( Authentication authResult) {
+    public String loginCheck( Authentication authResult, Model model) {
 
         String role = authResult.getAuthorities().toString();
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (user.getStatus().equals("blocked")) {
-            return "redirect:login?error=false&ban=true";
+            SecurityContextHolder.clearContext();
+            model.addAttribute("userIsBlocked", true);
+            return "redirect:/login?banned=true";
         }
 
         if (role.contains("user")) {

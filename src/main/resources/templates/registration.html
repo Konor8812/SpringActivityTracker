@@ -3,36 +3,36 @@
 <head>
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Registration</title>
+    <title th:text="#{lang.registrationPage}"></title>
 </head>
 <body>
-Registration form
+<p th:text="#{lang.registrationForm}">
 <form action="/" method="get">
-    <input type="submit" value="back"/>
+    <input type="submit" th:value="#{lang.back}"/>
 </form>
 <hr>
 <form method="post" action="/registration" >
 
-    <label for="login">Enter login(name)</label>
+    <label for="login" th:text="#{lang.enter.login}" > </label>
     <input type="text" id="login" name="login"/> <br>
 
-    <label for="pass">Enter password</label>
+    <label for="pass" th:text="#{lang.enter.password}"> </label>
     <input type="password"  id="pass" name="password"/> <br>
 
-    <label for="email">Enter email, optional </label>
+    <label for="email" th:text="#{lang.enter.email}"> </label>
     <input type="text" id="email" name="email"/> <br>
     <hr>
-    <input type="submit" value="Submit"/>
+    <input type="submit" th:value="#{lang.submit}"/>
 </form>
 <br>
 <div th:if="${regErrorUserExists}">
-    <p th:text="'user with such name exists!'"></p>
+    <p th:text="#{lang.user.exists}"></p>
 </div>
 <div th:if="${regErrorInvalidInput}">
-<p style="color:red" th:text="'Invalid data'"></p>
+<p style="color:red" th:text="#{lang.invalidData}"></p>
 </div>
 
-<p th:text="'already have an account?'"></p><br>
-GO to login <a href="/login?error=false" th:text="login"></a>
+<p th:text="#{lang.account.exists}"></p><br>
+<a href="/login" th:text="#{lang.login}"></a>
 </body>
 </html>

@@ -3,37 +3,37 @@
 <head xmlns:th="http://www.thymeleaf.org">
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Admin profile</title>
+    <title th:text="#{lang.admin.profile}"></title>
 </head>
 <body>
+<hr>
 <form method="post" action="/logout">
-    <input type="submit" value="Log Out">
+    <input type="submit" th:value="#{lang.logOut}">
 </form>
-<span th:text="'Welcome, dear administrator, it\'s your profile'" ></span><br>
+<span th:text="#{lang.admin.welcome}" ></span><br>
 <hr>
 <form method="get" action="/admin">
-    <input type="submit" value="back">
+    <input type="submit" th:value="#{lang.back}">
 </form>
 <hr>
 <form th:action="@{'/admin/profile/changePassword'}" th:method="GET">
-    <input type="submit" value="change password?"/>
+    <input type="submit" th:value="#{lang.change.password}"/>
 </form>
 <br>
 <div th:if="${shouldShowChangePassField}">
     <form th:action="@{'/admin/profile/changePassword'}" th:method="POST">
-        <label for="passField" th:text="'Enter new password'"></label>
+        <label for="passField" th:text="#{lang.enter.new.password}"></label>
         <input type="password" id="passField" name="newPass"/>
-        <input type="submit" value="confirm changes"/>
+        <input type="submit" th:value="#{lang.confirm.changes}"/>
     </form>
 </div>
 
 <div th:if="${currentUserEmptyEmail}">
     <form action="/admin/profile/addEmail" method="post">
-        <label for="emailField" th:text="'Add email'">asd</label>
+        <label for="emailField" th:text="#{lang.add.email}"></label>
         <input type="text" id="emailField" name="email"/>
-        <input type="submit" value="Add email"/>
+        <input type="submit" th:value="#{lang.add.email}"/>
     </form>
 </div>
-
 </body>
 </html>

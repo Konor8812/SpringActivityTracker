@@ -3,8 +3,10 @@ package com.repository;
 import com.entity.ActivityUser;
 import com.entity.embedded.ActivityUserId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,5 +23,10 @@ public interface ActivityUserRepository extends JpaRepository<ActivityUser, Acti
 
     @Query(value = "select user_id from mydb.user_has_activity where activity_id = (?) and status = 'requested'", nativeQuery = true)
     List<Long> getUsersWithRequestId(long activityId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from mydb.user_has_activity where activity_id=(?)", nativeQuery = true)
+    void deleteByActivityID(long activityID);
 
 }

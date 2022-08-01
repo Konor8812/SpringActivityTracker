@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -34,9 +35,11 @@ public class UserController {
 
     @GetMapping("")
     public String welcomeUser(Model model,
-                              @RequestParam(name="show", required = false) boolean shouldShowTags){
+                              @RequestParam(name="show", required = false) boolean shouldShowTags,
+                              HttpSession session){
+        String lang = (String) session.getAttribute("lang");
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Activity> activities = activityUserService.getAvailableActivities(currentUser.getId());
+        List<Activity> activities = activityUserService.getAvailableActivities(currentUser.getId(), lang);
 
         model.addAttribute("shouldShowTags", shouldShowTags);
         model.addAttribute("activities", activities);
@@ -44,18 +47,20 @@ public class UserController {
     }
 
     @GetMapping("/reqActivity")
-    public String requestActivity(@RequestParam(name = "activityId") long activityId, Model model){
+    public String requestActivity(@RequestParam(name = "activityId") long activityId, Model model, HttpSession session){
         User currentUser = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.reqActivity(activityId, currentUser.getId());
-        return welcomeUser(model, false);
+        return welcomeUser(model, false, session);
     }
 
     @GetMapping("/profile")
     public String getProfile(Model model,
-                             @RequestParam(name = "emailInvalid", required = false) boolean emailInvalid){
+                             @RequestParam(name = "emailInvalid", required = false) boolean emailInvalid,
+                             HttpSession session){
+        String lang = (String) session.getAttribute("lang");
         long currentUserId = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
         User currentUser = userService.findUserById(currentUserId);
-        List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(currentUserId);
+        List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(currentUserId, lang);
         if (!usersActivities.isEmpty()){
             model.addAttribute("hasActivities", true);
         }else{
@@ -70,29 +75,32 @@ public class UserController {
     }
 
     @GetMapping("/profile/completedActivity")
-    public String completedActivity(@RequestParam(name="activityId") long activityId, Model model){
+    public String completedActivity(@RequestParam(name="activityId") long activityId, Model model,
+                                    HttpSession session){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityCompleted(activityId, user.getId());
-        return getProfile(model, false);
+        return getProfile(model, false, session);
     }
 
     @GetMapping("/profile/gaveUpActivity")
-    public String activityGaveUp(@RequestParam(name = "activityId") long activityId, Model model){
+    public String activityGaveUp(@RequestParam(name = "activityId") long activityId, Model model,
+                                 HttpSession session){
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         activityUserService.activityGaveUp(activityId, user.getId());
-        return getProfile(model, false);
+        return getProfile(model, false, session);
     }
 
     @PostMapping("profile/addEmail")
     public String addUsersEmail(@RequestParam(name="userId") long userId,
             @RequestParam(name = "value") String str,
-                                Model model) {
+                                Model model,
+                                HttpSession session) {
         boolean emailValid = InputDataValidator.validateEmail(str);
         if (emailValid) {
             userService.updateUserEmail(userId, str);
-            return getProfile(model, false);
+            return getProfile(model, false, session);
         } else {
-            return getProfile(model, true);
+            return getProfile(model, true,session);
         }
     }
 

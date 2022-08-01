@@ -3,51 +3,50 @@
 <head xmlns:th="http://www.thymeleaf.org">
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{lang.admin.activities}"></title>
 </head>
 <body>
-You are admin
 <form method="get" action="/admin">
-    <input type="submit" value="back">
+    <input type="submit" th:value="#{lang.back}">
 </form><br>
 
 <br>
 <form method="get" action="/admin/activities/search">
-    <input type="submit" value="Go to search page">
+    <input type="submit" th:value="#{lang.go.to.search.page}">
 </form>
 <table>
     <tr>
         <th>
-            <span th:text="'name '"></span>
+            <span th:text="#{lang.activity.name} + ' '"></span>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=name&orderBy=asc'}" th:text="'↑'"/>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=name&orderBy=desc'}" th:text="'↓'"/>
         </th>
         <th>
-            <span th:text="'duration '"></span>
+            <span th:text="#{lang.duration} + ' '"></span>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=duration&orderBy=asc'}" th:text="'↑'"/>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=duration&orderBy=desc'}" th:text="'↓'"/>
         </th>
         <th>
-            <span th:text="'reward '"></span>
+            <span th:text="#{lang.reward} + ' '"></span>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=reward&orderBy=asc'}" th:text="'↑'"/>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=reward&orderBy=desc'}" th:text="'↓'"/>
         </th>
         <th>
-            <span th:text="'taken by amount '"></span>
+            <span th:text="#{lang.taken.by.amount} + ' '"></span>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=takes&orderBy=asc'}" th:text="'↑'"/>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=takes&orderBy=desc'}" th:text="'↓'"/>
         </th>
         <th>
-            <span th:text="'requested times '"></span>
+            <span th:text="#{lang.requested.times} + ' '"></span>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=requests&orderBy=asc'}" th:text="'↑'"/>
             <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=requests&orderBy=desc'}" th:text="'↓'"/>
         </th>
         <th>
             <div th:if="${shouldShowTags}">
-            <a href="/admin/activities?show=false" th:text="'hide tags'"></a>
+            <a href="/admin/activities?show=false" th:text="#{lang.hide.tags}"></a>
         </div>
             <div th:if="${!shouldShowTags}">
-                <a href="/admin/activities?show=true" th:text="'show tags'"></a>
+                <a href="/admin/activities?show=true" th:text="#{lang.show.tags}"></a>
             </div>
         </th>
     </tr>
@@ -63,7 +62,7 @@ You are admin
             </div>
         </td>
         <td>
-            <a th:href="@{'/admin/activities/deleteActivity?activityId=' + ${activity.id}}" th:text="delete" ></a>
+            <a th:href="@{'/admin/activities/deleteActivity?activityId=' + ${activity.id}}" th:text="#{lang.delete}" ></a>
         </td>
     </tr>
 </table><br>
@@ -71,24 +70,44 @@ You are admin
 
 <br>
 <hr>
-<form th:action="@{'admin/activities/addActivity'}" method="post">
-    <label for="name" th:text="'Enter name for activity || cyricls only'"/>
+<p th:text="#{lang.add.new.activity.form}"></p>
+<form th:action="@{'activities/addActivity'}" method="post">
+    <label for="name" th:text="#{lang.enter.activity.name}"/>
     <input id="name" type="text" name="name"><br>
 
-    <label for="duration" th:text="'Enter duration || decimal [hours-days]'"/>
+    <label for="duration" th:text="#{lang.enter.activity.duration}"/>
     <input id="duration" type="text" name="duration"><br>
 
-    <label for="reward" th:text="'Enter reward || decimal'"/>
+    <label for="reward" th:text="#{lang.enter.activity.reward}"/>
     <input id="reward" type="text" name="reward"><br>
 
-    <label for="description" th:text="'Ented description || cyrilics, tags should be separated with |,|'"/>
+    <label for="description" th:text="#{lang.enter.activity.description}"/>
     <input id="description" type="text" name="description"><br>
-    <input type="submit" value="submit"/>
+    <input type="submit" th:value="#{lang.submit}"/>
 </form>
 <br>
 <div th:if="${invalidData}"><hr>
-    <span th:text="'Invalid value(s), please read carefully!'"></span>
+    <span th:text="#{lang.invalid.activity.values}"></span>
 </div>
+<hr>
+<p th:text="#{lang.translation.form}"></p>
+<form th:action="@{'/admin/activities/addTranslation'}" method="post">
+    <label for="language" th:text="#{lang.enter.language.for.translation}"/>
+    <input id="language" type="text" name="language"><br>
 
+    <label for="enName" th:text="#{lang.enter.english.name.for.translation}"/>
+    <input id="enName" type="text" name="enName"><br>
+
+    <label for="translatedName" th:text="#{lang.enter.translated.name}"/>
+    <input id="translatedName" type="text" name="translatedName"><br>
+
+    <label for="translatedDescription" th:text="#{lang.enter.translated.description}"/>
+    <input id="translatedDescription" type="text" name="translatedDescription"><br>
+    <input type="submit" th:value="#{lang.submit}">
+</form>
+
+<div th:if="${translationError}">
+    <p style="color: #cb0b0b" th:text="#{lang.unsupported.language}"></p>
+</div>
 </body>
 </html>

@@ -3,40 +3,40 @@
 <head xmlns:th="http://www.thymeleaf.org">
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{lang.admin.search.page}"></title>
 
 </head>
 <body>
 <form method="get" action="/admin/activities">
-    <input type="submit" value="back">
+    <input type="submit" th:value="#{lang.back}">
 </form><br>
 <br>
 <span th:text="'Enter tag to get all such activities'"/>
 <form method="get" action="/admin/activities/search">
     <input type="text" name="tagName">
-    <input type="submit" value="search">
+    <input type="submit" th:value="#{lang.search}">
 </form>
 
 <div th:if="${shouldShowSearchResult}">
 <table>
     <tr>
         <th>
-            <span th:text="'name '"></span>
+            <span th:text="#{lang.activity.name} + ' '"></span>
         </th>
         <th>
-            <span th:text="'duration '"></span>
+            <span th:text="#{lang.duration} + ' '"></span>
             </th>
         <th>
-            <span th:text="'reward '"></span>
+            <span th:text="#{lang.reward} + ' '"></span>
            </th>
         <th>
-            <span th:text="'taken by amount '"></span>
+            <span th:text="#{lang.taken.by.amount} + ' '"></span>
             </th>
         <th>
-            <span th:text="'requested times '"></span>
+            <span th:text="#{lang.requested.times} + ' '"></span>
             </th>
         <th>
-            <span th:text="'tags '"></span>
+            <span th:text="#{lang.tags} + ' '"></span>
         </th>
     </tr>
     <tr th:each="activity: ${activitiesWithSuchTag}">
@@ -49,12 +49,11 @@
             <span th:text="${activity.description.description}"></span>
         </td>
         <td>
-            <a th:href="@{'/admin/activities/search?activityId=' + ${activity.id} + '&tagName=' + ${tagName}}" th:text="delete" ></a>
+            <a th:href="@{'/admin/activities/search?activityId=' + ${activity.id} + '&tagName=' + ${tagName}}" th:text="#{lang.delete}" ></a>
         </td>
     </tr>
 </table>
 </div>
-
 <br>
 </body>
 </html>

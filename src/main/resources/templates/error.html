@@ -3,15 +3,15 @@
 <head>
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title th:text="#{lang.error.page}"></title>
 </head>
 <body>
-smth went wrong
+<span th:text="#{lang.error.occurred}"></span>
 
-<div th:if="${userIsBlocked}">
-    <span style="color:red" th:text="'you are banned by admin!'"></span>
+<div th:if="${userIsBanned}">
+    <span style="color:red" th:text="#{lang.user.is.banned}"></span>
 </div>
 <br>
-<span><a th:href="@{'/logout'}" th:text="'back to main'"></a></span>
+<span><a th:href="@{'/logout'}" th:text="#{lang.return.to.main}"></a></span>
 </body>
 </html>

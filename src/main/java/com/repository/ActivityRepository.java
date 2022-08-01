@@ -50,13 +50,4 @@ public interface ActivityRepository extends JpaRepository<Activity, Long>{
      @Query(value = "delete from activity_description where id=(?)", nativeQuery = true)
      void deleteDescription(long descriptionId);
 
-    @Transactional
-     @Modifying
-     @Query(value = "SET FOREIGN_KEY_CHECKS = 0", nativeQuery = true)
-     void DISABLE_FOREIGN_KEY_CHECKS();
-
-    @Transactional
-    @Modifying
-    @Query(value = "SET FOREIGN_KEY_CHECKS = 1", nativeQuery = true)
-     void ENABLE_FOREIGN_KEY_CHECKS();
 }

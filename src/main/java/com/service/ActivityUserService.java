@@ -6,11 +6,13 @@ import com.entity.ActivityUser;
 import com.entity.embedded.ActivityUserId;
 import com.repository.ActivityRepository;
 import com.repository.ActivityUserRepository;
+import com.repository.LocalizationRepositoryRu;
 import com.util.Util;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,11 +32,13 @@ public class ActivityUserService {
     @Autowired
     UserService userService;
 
-    public List<Activity> getAvailableActivities(long userId){
+    @Autowired
+    LocalizationRepositoryRu localizationRepositoryRu;
+
+    public List<Activity> getAvailableActivities(long userId, String lang){
         List<Activity> alreadyTakenActivities = parseActivitiesFromUserActivity(
                 activityUserRepository.findAllUsersActivities(userId));
-
-        List<Activity> allActivities = activityService.getAllActivities("name", "asc");
+        List<Activity> allActivities = activityService.getAllActivities("name", "asc", lang);
         List<Activity> availableActivities = new ArrayList<>();
         L: for(Activity a: allActivities) {
             for (Activity ac : alreadyTakenActivities) {
@@ -48,7 +52,7 @@ public class ActivityUserService {
         return availableActivities;
     }
 
-    public List<ActivityDTO> getUsersActivities(long userId){
+    public List<ActivityDTO> getUsersActivities(long userId, String lang){
         List<ActivityUser> usersActivities = activityUserRepository.findAllUsersActivities(userId);
 
         List<ActivityDTO> dtos = new ArrayList<>();
@@ -56,7 +60,13 @@ public class ActivityUserService {
             Activity ac = parseActivityFromUserActivity(a);
             ActivityDTO dto = ActivityDTO.parseActivity(ac);
             long timeSpent = System.currentTimeMillis() - a.getTimeSpent();
-            dto.setTimeSpent(Util.getFormattedTimeSpent(timeSpent));
+            if(lang.equals("ru")){
+                dto.setName(localizationRepositoryRu.getLocActivityByName(dto.getName()).getActivityNameRu());
+                dto.setDuration(Util.localizedTimeRU(dto.getDuration()));
+                dto.setTimeSpent(Util.localizedTimeRU(Util.getFormattedTimeSpent(timeSpent)));
+            }else {
+                dto.setTimeSpent(Util.getFormattedTimeSpent(timeSpent));
+            }
             dto.setStatus(a.getStatus());
             dtos.add(dto);
         }
@@ -78,19 +88,24 @@ public class ActivityUserService {
     public void approveActivityForUser(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
         ActivityUser au = activityUserRepository.findByActivityUserId(activityUserId);
-        au.setStatus("inProcess");
-        au.setTime_spent(System.currentTimeMillis());
-        activityUserRepository.save(au);
+        if(au.getStatus().equals("requested")) {
+            au.setStatus("inProcess");
+            au.setTime_spent(System.currentTimeMillis());
+            activityUserRepository.save(au);
 
-        activityService.updateTakesAmount(activityId);
-        userService.updateRequestsAmount(userId, false);
+            activityService.updateTakesAmount(activityId);
+            userService.updateRequestsAmount(userId, false);
+        }
     }
+
 
     // requestsAmount -1; delete
     public void denyApproval(long activityId, long userId){
         ActivityUserId activityUserId = new ActivityUserId(activityId, userId);
-        activityUserRepository.deleteById(activityUserId);
-        userService.updateRequestsAmount(userId, false);
+        if(activityUserRepository.existsById(activityUserId)) {
+            activityUserRepository.deleteById(activityUserId);
+            userService.updateRequestsAmount(userId, false);
+        }
     }
 
     // points + ; activitiesAmount + 1;
@@ -113,7 +128,11 @@ public class ActivityUserService {
 
     public void activityDeleted(long activityId){
         List<Long> userIds = activityUserRepository.getUsersWithRequestId(activityId);
-        userService.activityDeleted(userIds);
+
+        if(userIds != null && !userIds.isEmpty()){
+            activityUserRepository.deleteByActivityID(activityId);
+            userService.activityDeleted(userIds);
+        }
     }
 
     public List<Activity> parseActivitiesFromUserActivity(List<ActivityUser> list){

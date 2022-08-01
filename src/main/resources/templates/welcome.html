@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
 <meta charset="UTF-8">
 <head >
     <link rel="stylesheet" th:href="@{/style.css}"/>
-    <title>Activity Tracker</title>
+    <title th:text="#{lang.indexPage}"></title>
 </head>
 <body>
 <hr>
-Welcome! <br>
-GO to  <a href="/registration" th:text="registration"></a>   <br><br>
-GO to  <a href="/login?error=false" th:text="login"></a>
-
+<p th:text="#{lang.welcome}"/> <br>
+<a href="/registration" th:text="#{lang.registration}"></a>   <br><br>
+<a href="/login" th:text="#{lang.login}"></a>
+<hr>
+<a th:href="@{/(lang='ru')}" th:text="#{lang.ru}">RU</a>
+<a th:href="@{/(lang='en')}" th:text="#{lang.en}">EN</a>
 </body>
 </html>

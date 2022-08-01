@@ -8,6 +8,7 @@ import com.entity.User;
 import com.service.ActivityService;
 import com.service.ActivityUserService;
 import com.service.UserService;
+import com.util.Util;
 import com.validator.InputDataValidator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.Element;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -37,7 +40,6 @@ public class AdminController {
     public String welcomeAdmin(Model model) {
         List<UserDTO> users = userService.getAllUsersList();
         model.addAttribute("users", users);
-
         return "admin/mainAdmin";
     }
 
@@ -73,7 +75,7 @@ public class AdminController {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             model.addAttribute("currentUserEmptyEmail", true);
         }
-        if(!isNewPassValid){
+        if (!isNewPassValid) {
             model.addAttribute("newValueInvalid", true);
         }
         model.addAttribute("shouldShowChangePassField", true);
@@ -82,11 +84,11 @@ public class AdminController {
 
     @PostMapping("/profile/changePassword")
     public String changePass(@RequestParam(name = "newPass") String newPassword, Model model) {
-        if(InputDataValidator.validatePassword(newPassword)) {
+        if (InputDataValidator.validatePassword(newPassword)) {
             User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             userService.updateUserPass(user.getId(), newPassword);
             return getProfile(model);
-        }else{
+        } else {
             return showUpdatePassField(model, false);
         }
     }
@@ -103,9 +105,12 @@ public class AdminController {
     public String getActivities(Model model,
                                 @RequestParam(name = "show", required = false) boolean shouldShowTags,
                                 @RequestParam(name = "errorInvalidData", required = false) boolean invalidData,
-                                @RequestParam(name= "sortBy", required = false, defaultValue = "name") String sortBy,
-                                @RequestParam(name= "orderBy", required = false, defaultValue = "asc") String orderBy) {
-        List<Activity> activities = activityService.getAllActivities(sortBy, orderBy);
+                                @RequestParam(name = "sortBy", required = false, defaultValue = "name") String sortBy,
+                                @RequestParam(name = "orderBy", required = false, defaultValue = "asc") String orderBy,
+                                HttpSession session) {
+        String lang = (String) session.getAttribute("lang");
+        List<Activity> activities = activityService.getAllActivities(sortBy, orderBy, lang);
+
         model.addAttribute("activities", activities);
         model.addAttribute("shouldShowTags", shouldShowTags);
         model.addAttribute("invalidData", invalidData);
@@ -113,10 +118,12 @@ public class AdminController {
     }
 
     @GetMapping("/activities/deleteActivity")
-    public String deleteActivity(@RequestParam(name = "activityId") long activityId, Model model) {
-        activityService.deleteActivity(activityId);
+    public String deleteActivity(@RequestParam(name = "activityId") long activityId,
+                                 Model model,
+                                 HttpSession session) {
         activityUserService.activityDeleted(activityId);
-        return getActivities(model, false, false, "name", "asc");
+        activityService.deleteActivity(activityId);
+        return getActivities(model, false, false, "name", "asc", session);
     }
 
     @PostMapping("/activities/addActivity")
@@ -124,8 +131,9 @@ public class AdminController {
                               @RequestParam(name = "duration") String duration,
                               @RequestParam(name = "reward") double reward,
                               @RequestParam(name = "description") String description,
-                              Model model) {
-
+                              Model model,
+                              HttpSession session) {
+        System.out.println("reooo");
         if (InputDataValidator.validateActivity(name, duration, reward, description)) {
             Activity activity = new Activity();
             activity.setName(name);
@@ -134,24 +142,26 @@ public class AdminController {
             activity.setDescription(new Description(description));
 
             if (activityService.addActivity(activity)) {
-                return getActivities(model, false, false, "name", "asc");
+                return getActivities(model, false, false, "name", "asc", session);
             }
         }
-        return getActivities(model, false, true, "name", "asc");
+        return getActivities(model, false, true, "name", "asc", session);
 
     }
 
     @GetMapping("/usersStats")
     public String getUsersRequests(@RequestParam(name = "userId") long userId,
-                                   Model model) {
+                                   Model model,
+                                   HttpSession session) {
+        String lang = (String)session.getAttribute("lang");
         User user = userService.findUserById(userId);
         model.addAttribute("user", user);
 
-        List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(userId);
+        List<ActivityDTO> usersActivities = activityUserService.getUsersActivities(userId, lang);
         model.addAttribute("usersActivities", usersActivities);
-        if(usersActivities.isEmpty()) {
+        if (usersActivities.isEmpty()) {
             model.addAttribute("hasActivities", false);
-        }else{
+        } else {
             model.addAttribute("hasActivities", true);
         }
 
@@ -161,23 +171,24 @@ public class AdminController {
     @GetMapping("/usersStats/denyOrApproveActivity")
     public String approveActivity(@RequestParam(name = "userId") long userId,
                                   @RequestParam(name = "activityId") long activityId,
-                                  @RequestParam(name = "approve") boolean approve, Model model) {
+                                  @RequestParam(name = "approve") boolean approve, Model model,
+                                  HttpSession session) {
         if (approve) {
             activityUserService.approveActivityForUser(activityId, userId);
         } else {
             activityUserService.denyApproval(activityId, userId);
         }
-        return getUsersRequests(userId, model);
+        return getUsersRequests(userId, model, session);
     }
 
     @GetMapping("/activities/search")
-    public String getSearchPage(@RequestParam(name="tagName", required = false) String tagName,
-                                @RequestParam(name="activityId", required = false) Long activityId,
-                                Model model){
-        if(tagName == null || tagName.isEmpty()){
+    public String getSearchPage(@RequestParam(name = "tagName", required = false) String tagName,
+                                @RequestParam(name = "activityId", required = false) Long activityId,
+                                Model model) {
+        if (tagName == null || tagName.isEmpty()) {
             return "admin/adminActivitySearch";
         }
-        if(activityId != null){
+        if (activityId != null) {
             activityService.deleteActivity(activityId);
         }
         List<Activity> activities = activityService.getAllActivitiesWithTag(tagName);
@@ -186,6 +197,21 @@ public class AdminController {
         return "admin/adminActivitySearch";
     }
 
-
+    @PostMapping("/activities/addTranslation")
+    public String addTranslationForActivity(@ModelAttribute(name = "language") String language,
+                                            @ModelAttribute(name = "enName") String enName,
+                                            @ModelAttribute(name = "translatedName") String translatedName,
+                                            @ModelAttribute(name = "translatedDescription") String translatedDescription,
+                                            Model model,
+                                            HttpSession session) {
+        boolean added = false;
+        if(InputDataValidator.validateActivityForLocalization(language, enName, translatedName, translatedDescription)){
+             added = activityService.addLocalizationForActivity(language, enName, translatedName, translatedDescription);
+        }
+        if (!added){
+            model.addAttribute("translationError", true);
+        }
+        return getActivities(model, true, false, "name", "asc", session);
+    }
 
 }

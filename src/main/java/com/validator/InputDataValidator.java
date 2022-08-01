@@ -38,11 +38,28 @@ public class InputDataValidator {
         Matcher durationMatcher = Pattern.compile("(\\d)+((\\.\\d)?) (hours|days)").matcher(duration);
         Matcher descriptionMatcher = Pattern.compile("([a-zA-Z]+)((, [a-zA-Z]+)*)").matcher(description);
 
-//        System.out.println("name " + nameMatcher.matches());
-//        System.out.println("duration " + durationMatcher.matches());
-//        System.out.println("reward " + reward + "  " + (reward > 0));
-//        System.out.println("description " + descriptionMatcher.matches());
         return nameMatcher.matches() && durationMatcher.matches() && descriptionMatcher.matches() && reward > 0;
+
+    }
+
+    public static boolean validateActivityForLocalization(String lang, String enName, String translatedName, String translatedDescription){
+
+        String languages = "ru en";
+        boolean langValid = languages.contains(lang.trim().toLowerCase());
+
+        Matcher nameMatcher = Pattern.compile("[A-Za-z ]{2,}").matcher(enName);
+
+        Matcher translatedNameMatcher = Pattern.compile("\\S{2,}").matcher(translatedName);
+
+        Matcher translatedDescriptionMatcher = Pattern.compile("(\\S+)((, \\S+)*)").matcher(translatedDescription);
+
+        System.out.println("lang  =  " + lang + " matches " + langValid);
+        System.out.println("en name = " + enName + " matches " + nameMatcher.matches());
+        System.out.println("translated name = "  + translatedName + " matches " + translatedNameMatcher.matches());
+        System.out.println("description = " + translatedDescription + " matches " + translatedDescriptionMatcher.matches());
+
+        return langValid && nameMatcher.matches() && translatedNameMatcher.matches() && translatedDescriptionMatcher.matches();
+
 
     }
 }

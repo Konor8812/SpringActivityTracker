@@ -3,35 +3,35 @@
 <head>
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>User main page</title>
+    <title th:text="#{lang.user.main.page}"></title>
 </head>
 <body>
 <form method="post" action="/logout">
-    <input type="submit" value="Log Out">
+    <input type="submit" th:value="#{lang.logOut}">
 </form>
 <hr>
-Logged in as user
+<span th:text="#{lang.loggedAsUser}"></span>
 <br>
 <form method="get" action="/user/profile">
-    <input type="submit" value="profile">
+    <input type="submit" th:value="#{lang.profile}">
 </form>
 
 <hr>
 <table>
     <tr>
-        <th>name</th>
-        <th>duration</th>
-        <th>reward</th>
-        <th>total takes</th>
+        <th th:text="#{lang.activity.name}"></th>
+        <th th:text="#{lang.duration}"></th>
+        <th th:text="#{lang.reward}"></th>
+        <th th:text="#{lang.taken.by.amount}"></th>
         <th>
             <div th:if="${shouldShowTags}">
-                <a href="/user?show=false" th:text="'hide tags'"></a>
+                <a href="/user?show=false" th:text="#{lang.hide.tags}"></a>
             </div>
             <div th:if="${!shouldShowTags}">
-                <a href="/user?show=true" th:text="'show tags'"></a>
+                <a href="/user?show=true" th:text="#{lang.show.tags}"></a>
             </div>
         </th>
-        <th>take activity!</th>
+        <th th:text="#{lang.take.activity}"></th>
     </tr>
     <tr th:each="activity: ${activities}">
         <td th:text="${activity.name}"></td>
@@ -43,7 +43,7 @@ Logged in as user
                 <span th:text="${activity.description}"></span>
             </div>
         </td>
-        <td><a th:href="@{'/user/reqActivity?activityId=' + ${activity.id}}" th:text="take"></a></td>
+        <td><a th:href="@{'/user/reqActivity?activityId=' + ${activity.id}}" th:text="#{lang.take}"></a></td>
     </tr>
 </table>
 </body>

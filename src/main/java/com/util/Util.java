@@ -83,4 +83,13 @@ public abstract class Util {
         return sorted;
 
     }
+
+    public static String localizedTimeRU(String duration) {
+        duration = duration.replaceAll("days", "дней");
+        duration = duration.replaceAll("hours", "часов");
+        duration = duration.replaceAll("minutes", "минут");
+        duration = duration.replaceAll("seconds", "секунд");
+        return  duration;
+    }
+
 }

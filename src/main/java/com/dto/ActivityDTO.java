@@ -6,8 +6,8 @@ import com.entity.Description;
 public class ActivityDTO {
 
     private final long id;
-    private final String name;
-    private final String duration;
+    private String name;
+    private String duration;
     private final double reward;
     private final int takenBy;
 
@@ -42,6 +42,14 @@ public class ActivityDTO {
 
     public static ActivityDTO parseActivity(Activity activity){
         return new ActivityDTO(activity);
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 
     public String getName() {

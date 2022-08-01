@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html lang="en" >
 <head xmlns:th="http://www.thymeleaf.org">
+
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Users activities</title>
+    <meta http-equiv="refresh" content="5">
+    <title th:text="#{lang.users.statistics.page}"></title>
 </head>
 <body>
 <form method="get" action="/admin">
-    <input type="submit" value="back">
+    <input type="submit" th:value="#{lang.back}">
 </form>
 <hr>
 
-    <span th:text="'User ' + ${user.name} + ', id = ' + ${user.id} +  ', has ' + ${user.activitiesAmount} + ' activities done and ' + ${user.totalPoints} + ' points earned'" ></span>
+    <span th:text="#{lang.user} + ' ' + ${user.name} + ', ' + #{lang.id} + ' = ' + ${user.id} +  ', '+ #{lang.has} + ' ' + ${user.activitiesAmount} + ' ' + #{lang.activities.done} + ' ' + ${user.totalPoints} + ' ' + #{lang.points.earned}" ></span>
 <div th:if="${hasActivities}">
     <table>
         <tr>
-            <th>name</th>
-            <td>status</td>
-            <th>duration</th>
-            <th>reward</th>
-            <th>time spent</th>
+            <th th:text="#{lang.activity.name}"></th>
+            <td th:text="#{lang.status}"></td>
+            <th th:text="#{lang.duration}"></th>
+            <th th:text="#{lang.reward}"></th>
+            <th th:text="#{lang.time.spent}"></th>
             <th> ||| </th>
         </tr>
+
         <tr th:each="activity: ${usersActivities}">
             <td th:text="${activity.name}"> </td>
-            <td th:text="${activity.status}"></td>
+            <td th:text="#{${activity.status}}"></td>
             <td th:text="${activity.duration}"> </td>
             <td th:text="${activity.reward}"> </td>
             <td>
@@ -38,19 +41,19 @@
 
             <td>
                 <div th:if="${activity.status == 'requested'}">
-                    <a th:href="@{'/admin/usersStats/denyOrApproveActivity?approve=true&activityId=' + ${activity.id} + '&userId=' + ${user.id}}" th:text="'approve'"></a>
+                    <a th:href="@{'/admin/usersStats/denyOrApproveActivity?approve=true&activityId=' + ${activity.id} + '&userId=' + ${user.id}}" th:text="#{lang.approve}"></a>
                 </div>
             </td>
             <td>
                 <div th:if="${activity.status == 'requested'}">
-                    <a th:href="@{'/admin/usersStats/denyOrApproveActivity?approve=false&activityId=' + ${activity.id} + '&userId=' + ${user.id}}" th:text="'deny'"></a>
+                    <a th:href="@{'/admin/usersStats/denyOrApproveActivity?approve=false&activityId=' + ${activity.id} + '&userId=' + ${user.id}}" th:text="#{lang.deny.approval}"></a>
                 </div>
             </td>
         </tr>
     </table>
 </div>
 <div th:if="${!hasActivities}">
-    <span style="color: blueviolet" th:text="'User has no activities'"/>
+    <span style="color: blueviolet" th:text="#{lang.user.has.no.activities}"/>
 </div>
 <hr>
 </body>

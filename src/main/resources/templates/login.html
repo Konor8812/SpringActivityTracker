@@ -3,33 +3,32 @@
 <head>
     <link rel="stylesheet" th:href="@{/style.css}"/>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title th:text="#{lang.loginPage}">Login</title>
 </head>
 <body>
 <hr>
-Login form
+<p th:text="#{lang.loginForm}">
 <form action="/" method="get">
-    <input type="submit" value="back"/>
+    <input type="submit" th:value="#{lang.back}"/>
 </form>
 <hr>
 <form th:method="POST" th:action="@{/login}" th:object="${userForm}">
 
-        <label for="login">Enter login(name)</label>
+        <label for="login" th:text="#{lang.enter.login}"></label>
         <input type="text" th:field="*{username}" id="login"/> <br>
 
-        <label for="pass">Enter password</label>
+        <label for="pass" th:text="#{lang.enter.password}"></label>
         <input type="password" th:field="*{password}" id="pass"/> <br>
         <hr>
         <input type="submit" value="Submit"/>
 </form>
 
 <div th:if="${userIsBlocked}">
-    <span style="color:red" th:text="'you are banned by admin!'"></span>
+    <span style="color:red" th:text="#{lang.banned}"></span>
 </div>
 
 <div th:if="${logErrorNoSuchUserFound}">
-    <p th:text="'no user with such creditials found'"></p>
+    <p th:text="#{lang.no.such.user}"></p>
 </div>
-
 </body>
 </html>

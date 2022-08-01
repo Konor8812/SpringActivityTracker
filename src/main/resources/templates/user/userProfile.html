@@ -2,35 +2,36 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <link rel="stylesheet" th:href="@{/style.css}"/>
+    <script type="text/javascript" th:src="@{/refreshScript.js}"></script>
     <meta charset="UTF-8">
-    <title>Users profile</title>
+    <title th:text="#{lang.users.profile}"></title>
 </head>
 <body>
 <form method="post" action="/logout">
-    <input type="submit" value="Log Out">
+    <input type="submit" th:value="#{lang.logOut}">
 </form><hr>
-<span style="color:darkgreen"  th:text="'Welcome, ' + ${user.name} + ', it\'s your profile'" ></span><br>
-<span style="color: darkviolet" th:text="'Currently you have ' + ${user.activitiesAmount} + ' activities done and ' + ${user.requestsAmount} + ' requests'"></span><br>
-<span style="color: darkmagenta" th:text="'You have earned ' + ${user.totalPoints} + ' points'"></span><br>
+<span style="color:darkgreen"  th:text="#{lang.welcome} + ', ' + ${user.name} + ', ' + #{lang.it.is.your.profile} " ></span><br>
+<span style="color: darkviolet" th:text="#{lang.you.have} + ' ' + ${user.activitiesAmount} + ' ' + #{lang.activities.done} + ' ' + #{lang.and} + ' ' + ${user.requestsAmount} + ' ' + #{lang.requests}"></span><br>
+<span style="color: darkmagenta" th:text="#{lang.you.have.earned} + ' ' + ${user.totalPoints} + ' ' + #{lang.points}"></span><br>
 <hr>
 
 <form th:method="GET" th:action="@{'/user'}">
-    <input type="submit" value="back">
+    <input type="submit" th:value="#{lang.back}">
 </form>
 <div th:if="${hasActivities}">
 <hr>
 <table>
     <tr>
-        <th>name</th>
-        <td>status</td>
-        <th>duration</th>
-        <th>reward</th>
-        <th>time spent</th>
-        <th>completed?</th>
+        <th th:text="#{lang.activity.name}"></th>
+        <td th:text="#{lang.status}"></td>
+        <th th:text="#{lang.duration}"></th>
+        <th th:text="#{lang.reward}"></th>
+        <th th:text="#{lang.time.spent}"></th>
+        <th th:text="#{lang.activity.completed}"></th>
     </tr>
     <tr th:each="activity: ${usersActivities}">
         <td th:text="${activity.name}"> </td>
-        <td th:text="${activity.status}"></td>
+        <td th:text="#{${activity.status}}"></td>
         <td th:text="${activity.duration}"> </td>
         <td th:text="${activity.reward}"> </td>
         <td>
@@ -43,32 +44,32 @@
         </td>
         <td>
             <div th:if="${activity.status == 'inProcess'}">
-            <a th:href="@{'/user/profile/completedActivity?activityId=' + ${activity.id}}" th:text="'submit'"></a>
+            <a th:href="@{'/user/profile/completedActivity?activityId=' + ${activity.id}}" th:text="#{lang.submit}"></a>
             </div>
         </td>
         <td>
             <div th:if="${activity.status == 'inProcess'}">
-                <a th:href="@{'/user/profile/gaveUpActivity?activityId=' + ${activity.id}}" th:text="'give up'"></a>
+                <a th:href="@{'/user/profile/gaveUpActivity?activityId=' + ${activity.id}}" th:text="#{lang.giveUp}"></a>
             </div>
         </td>
     </tr>
 </table>
 </div>
 <div th:if="${!hasActivities}">
-    <span style="color: chocolate" th:text="'You have no activities!'"/> <br>
+    <span style="color: chocolate" th:text="#{lang.you.have.no.activities}"/> <br>
 </div>
 
 <hr>
 
 <div th:if="${user.emailEmpty}">
     <form action="/user/profile/addEmail" method = "post">
-        <label for="emailField" th:text="'Add your email'"></label>
+        <label for="emailField" th:text="#{lang.add.email}"></label>
         <input type="text" name="value" id="emailField"/>
         <input type="hidden" name="userId" th:value="${user.id}">
-        <input type="submit" value="Add email"/>
+        <input type="submit" th:value="#{lang.submit}"/>
     </form>
     <div th:if="${showEmailInvalidField}">
-        <span th:text="'Invalid email format!'"/>
+        <span th:text="#{lang.invalid.email.format}"/>
     </div>
 </div>
 </body>
