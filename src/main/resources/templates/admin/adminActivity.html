@@ -18,35 +18,35 @@
     <tr>
         <th>
             <span th:text="#{lang.activity.name} + ' '"></span>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=name&orderBy=asc'}" th:text="'↑'"/>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=name&orderBy=desc'}" th:text="'↓'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=name&orderBy=asc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=name&orderBy=desc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↓'"/>
         </th>
         <th>
             <span th:text="#{lang.duration} + ' '"></span>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=duration&orderBy=asc'}" th:text="'↑'"/>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=duration&orderBy=desc'}" th:text="'↓'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=duration&orderBy=asc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=duration&orderBy=desc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↓'"/>
         </th>
         <th>
             <span th:text="#{lang.reward} + ' '"></span>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=reward&orderBy=asc'}" th:text="'↑'"/>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=reward&orderBy=desc'}" th:text="'↓'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=reward&orderBy=asc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=reward&orderBy=desc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↓'"/>
         </th>
         <th>
             <span th:text="#{lang.taken.by.amount} + ' '"></span>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=takes&orderBy=asc'}" th:text="'↑'"/>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=takes&orderBy=desc'}" th:text="'↓'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=takes&orderBy=asc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=takes&orderBy=desc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↓'"/>
         </th>
         <th>
             <span th:text="#{lang.requested.times} + ' '"></span>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=requests&orderBy=asc'}" th:text="'↑'"/>
-            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=requests&orderBy=desc'}" th:text="'↓'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=requests&orderBy=asc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↑'"/>
+            <a th:href="@{'/admin/activities/?show=' + ${shouldShowTags} + '&sortBy=requests&orderBy=desc' + '&activities=' + ${activities}+ '&activitiesPageNumber=' + ${activitiesPageNumber}}" th:text="'↓'"/>
         </th>
         <th>
             <div th:if="${shouldShowTags}">
-            <a href="/admin/activities?show=false" th:text="#{lang.hide.tags}"></a>
+            <a th:href="@{'/admin/activities?show=false&activities=' + ${activities} + '&activitiesPageNumber=' + ${activitiesPageNumber} + '&sortBy=noSortingNeeded'}"  th:text="#{lang.hide.tags}"></a>
         </div>
             <div th:if="${!shouldShowTags}">
-                <a href="/admin/activities?show=true" th:text="#{lang.show.tags}"></a>
+                <a th:href="@{'/admin/activities?show=true&activities=' + ${activities} + '&activitiesPageNumber=' + ${activitiesPageNumber} + '&sortBy=noSortingNeeded'}" th:text="#{lang.show.tags}"></a>
             </div>
         </th>
     </tr>
@@ -66,7 +66,16 @@
         </td>
     </tr>
 </table><br>
+<div>
+    <div th:if="${activitiesPageNumber > 0}">
+     <a th:href="@{'/admin/activities?activitiesPageNumber=' + ${activitiesPageNumber - 1} + '&show=' + ${shouldShowTags}}" th:text="#{lang.previous.page}" ></a>
+    </div>
+    <p th:text="'  '"/>
+    <div th:if="${hasNextPageToShow}">
+        <a th:href="@{'/admin/activities?activitiesPageNumber=' + ${activitiesPageNumber + 1} + '&show=' + ${shouldShowTags}}" th:text="#{lang.next.page}" ></a>
+    </div>
 
+</div>
 
 <br>
 <hr>

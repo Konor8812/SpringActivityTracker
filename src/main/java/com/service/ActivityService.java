@@ -7,12 +7,14 @@ import com.repository.ActivityRepository;
 import com.repository.LocalizationRepositoryRu;
 import com.util.Util;
 import org.apache.log4j.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ActivityService {
@@ -34,67 +36,24 @@ public class ActivityService {
         }
     }
 
-    public List<Activity> getAllActivities(String sortedBy, String order, String lang) {
-        List<Activity> result;
-        switch (sortedBy.concat(order)) {
-            case "nameasc":
-                result = activityRepository.findAllByNameASC();
-                break;
-            case "namedesc":
-                result = activityRepository.findAllByNameDESC();
-                break;
-            case "rewarddesc":
-                result = activityRepository.findAllByRewardDESC();
-                break;
-            case "rewardasc":
-                result = activityRepository.findAllByRewardASC();
-                break;
-            case "requestsasc":
-                result = activityRepository.findAllByRequestsASC();
-                break;
-            case "requestsdesc":
-                result = activityRepository.findAllByRequestsDESC();
-                break;
-            case "takesasc":
-                result = activityRepository.findAllByTakesASC();
-                break;
-            case "takesdesc":
-                result = activityRepository.findAllByTakesDESC();
-                break;
-            case "durationasc":
-                result = Util.sortActivitiesByDuration(activityRepository.findAll(), "asc");
-                break;
-            case "durationdesc":
-                result = Util.sortActivitiesByDuration(activityRepository.findAll(), "desc");
-                break;
-            default:
-                logger.error("Error while sorting activities, params => " + sortedBy + " " + order);
-                result = activityRepository.findAllByNameASC();
-        }
-
-        if (lang.equals("ru")) {
-            for (Activity a : result) {
-
-                LocalizationActivityRu lar = localizationRepositoryRu.getLocActivityByName(a.getName());
-                if (lar != null) {
-                    a.setName(lar.getActivityNameRu());
-                    a.getDescription().setDescription(lar.getActivityDescriptionRu());
+    public List<Activity> getNextActivities(int offset, String lang) {
+        Pageable nextPageWithFiveElements = PageRequest.of(offset, 5);
+        Page<Activity> p = activityRepository.findAll(nextPageWithFiveElements);
+        System.out.println(p.getContent());
+        List<Activity> activities = p.getContent();
+        switch (lang){
+            case "ru":
+                for(Activity a : activities){
+                    LocalizationActivityRu lar = localizationRepositoryRu.getLocActivityByName(a.getName());
+                    if(lar != null){
+                        a.getDescription().setDescription(lar.getActivityDescriptionRu());
+                        a.setName(lar.getActivityNameRu());
+                    }
+                    a.setDuration(Util.localizedTimeRU(a.getDuration()));
                 }
-                a.setDuration(Util.localizedTimeRU(a.getDuration()));
-
-            }
-            //else if(){}
-
-            if (sortedBy.equals("name")) {
-
-                if (order.equals("desc")) {
-                    result = result.stream().sorted(Comparator.comparing(Activity::getName).reversed()).collect(Collectors.toList());
-                } else {
-                    result = result.stream().sorted(Comparator.comparing(Activity::getName)).collect(Collectors.toList());
-                }
-            }
+                return activities;
+            default: return activities;
         }
-        return result;
     }
 
     public void updateRequestedTimesAmount(long activityId) {
@@ -151,5 +110,9 @@ public class ActivityService {
                 return false;
         }
 
+    }
+
+    public List<Activity> getAllActivities(String name, String asc, String lang) {
+        return activityRepository.findAll();
     }
 }

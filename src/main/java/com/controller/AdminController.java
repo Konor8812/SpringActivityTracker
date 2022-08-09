@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.w3c.dom.Element;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -37,7 +36,10 @@ public class AdminController {
     ActivityUserService activityUserService;
 
     @GetMapping("")
-    public String welcomeAdmin(Model model) {
+    public String welcomeAdmin(Model model, HttpSession session) {
+        if (session.getAttribute("lang") == null){
+            session.setAttribute("lang", "en");
+        }
         List<UserDTO> users = userService.getAllUsersList();
         model.addAttribute("users", users);
         return "admin/mainAdmin";
@@ -46,7 +48,7 @@ public class AdminController {
     @GetMapping("/banUser")
     public String banUser(@RequestParam(name = "shouldBan") boolean ban,
                           @RequestParam(name = "userId") long userId,
-                          Model model) {
+                          Model model, HttpSession session) {
         String status;
         if (ban) {
             status = "blocked";
@@ -54,7 +56,7 @@ public class AdminController {
             status = "available";
         }
         userService.updateStatus(userId, status);
-        return welcomeAdmin(model);
+        return welcomeAdmin(model, session);
     }
 
     @GetMapping("/profile")
@@ -107,11 +109,30 @@ public class AdminController {
                                 @RequestParam(name = "errorInvalidData", required = false) boolean invalidData,
                                 @RequestParam(name = "sortBy", required = false, defaultValue = "name") String sortBy,
                                 @RequestParam(name = "orderBy", required = false, defaultValue = "asc") String orderBy,
+                                @RequestParam(name= "activitiesPageNumber", required = false) Integer activitiesPageNumber,
+                                @RequestParam(name="activities", required = false) String activitiesAsString,
                                 HttpSession session) {
         String lang = (String) session.getAttribute("lang");
-        List<Activity> activities = activityService.getAllActivities(sortBy, orderBy, lang);
-
+        List<Activity> activities = Util.parseActivitiesFromString(activitiesAsString, lang);
+        int pageNumber;
+        if(activitiesPageNumber == null){
+            pageNumber = 0;
+        }else {
+            pageNumber = activitiesPageNumber;
+        }
+        boolean hasNextPageToShow;
+        if(activities == null) {
+            activities = activityService.getNextActivities(pageNumber, lang);
+        }else {
+            if(!sortBy.equals("noSortingNeeded")) {
+                activities = Util.sortActivities(activities, sortBy, orderBy);
+            }
+        }
+        hasNextPageToShow = activities.size() == 5 && !activityService.getNextActivities(pageNumber + 1, "en").isEmpty();
         model.addAttribute("activities", activities);
+        model.addAttribute("activitiesPageNumber", activitiesPageNumber);
+        model.addAttribute("hasNextPageToShow", hasNextPageToShow);
+        model.addAttribute("activitiesPageNumber", pageNumber);
         model.addAttribute("shouldShowTags", shouldShowTags);
         model.addAttribute("invalidData", invalidData);
         return "admin/adminActivity";
@@ -123,7 +144,7 @@ public class AdminController {
                                  HttpSession session) {
         activityUserService.activityDeleted(activityId);
         activityService.deleteActivity(activityId);
-        return getActivities(model, false, false, "name", "asc", session);
+        return getActivities(model, false, false, "name", "asc", 0, null, session);
     }
 
     @PostMapping("/activities/addActivity")
@@ -133,7 +154,6 @@ public class AdminController {
                               @RequestParam(name = "description") String description,
                               Model model,
                               HttpSession session) {
-        System.out.println("reooo");
         if (InputDataValidator.validateActivity(name, duration, reward, description)) {
             Activity activity = new Activity();
             activity.setName(name);
@@ -142,10 +162,10 @@ public class AdminController {
             activity.setDescription(new Description(description));
 
             if (activityService.addActivity(activity)) {
-                return getActivities(model, false, false, "name", "asc", session);
+                return getActivities(model, false, false, "name", "asc", 0,  null, session);
             }
         }
-        return getActivities(model, false, true, "name", "asc", session);
+        return getActivities(model, false, true, "name", "asc", 0, null, session);
 
     }
 
@@ -202,6 +222,8 @@ public class AdminController {
                                             @ModelAttribute(name = "enName") String enName,
                                             @ModelAttribute(name = "translatedName") String translatedName,
                                             @ModelAttribute(name = "translatedDescription") String translatedDescription,
+                                            @RequestParam(name = "activityPage", required = false) int activityPageNum,
+                                            @RequestParam(name = "activities") List<Activity> activities,
                                             Model model,
                                             HttpSession session) {
         boolean added = false;
@@ -211,7 +233,7 @@ public class AdminController {
         if (!added){
             model.addAttribute("translationError", true);
         }
-        return getActivities(model, true, false, "name", "asc", session);
+        return getActivities(model, true, false, "name", "asc", activityPageNum,  null, session);
     }
 
 }

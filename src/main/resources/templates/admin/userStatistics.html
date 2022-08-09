@@ -12,7 +12,6 @@
     <input type="submit" th:value="#{lang.back}">
 </form>
 <hr>
-
     <span th:text="#{lang.user} + ' ' + ${user.name} + ', ' + #{lang.id} + ' = ' + ${user.id} +  ', '+ #{lang.has} + ' ' + ${user.activitiesAmount} + ' ' + #{lang.activities.done} + ' ' + ${user.totalPoints} + ' ' + #{lang.points.earned}" ></span>
 <div th:if="${hasActivities}">
     <table>
