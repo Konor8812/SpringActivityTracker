@@ -7,12 +7,12 @@
 
 </head>
 <body>
-<form method="get" action="/admin/activities">
+<form method="get" th:action="@{'/admin/activities'}">
     <input type="submit" th:value="#{lang.back}">
 </form><br>
 <br>
-<span th:text="'Enter tag to get all such activities'"/>
-<form method="get" action="/admin/activities/search">
+<span th:text="#{lang.enter.tag.for.searching}"/>
+<form method="get" th:action="@{'/admin/activities/search'}">
     <input type="text" name="tagName">
     <input type="submit" th:value="#{lang.search}">
 </form>

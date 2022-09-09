@@ -43,8 +43,8 @@ class UtilTest {
 
     @Test
     void localizedTimeRU() {
-        String expected = "2 дня 4 часа 3 минуты";
-        String actual = Util.localizedTimeRU("2 days 4 hours 3 minutes");
+        String expected = "2 дней 4 часов 3 минут ";
+        String actual = Util.localizedTimeRU("2 days 4 hours 3 minutes ");
         Assertions.assertEquals(expected, actual);
     }
 

@@ -74,7 +74,6 @@ public class MainController {
     public String loginForm(@RequestParam(name = "error", required = false) boolean error,
                             @RequestParam(name = "banned", required = false) boolean banned,
                             Model model) {
-        System.out.println(banned);
         model.addAttribute("userForm", new User());
         if (error) {
             model.addAttribute("logErrorNoSuchUserFound", true);

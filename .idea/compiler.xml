@@ -11,5 +11,8 @@
         <module name="IntellijIdea_projects" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="IntellijIdea_projects" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>
